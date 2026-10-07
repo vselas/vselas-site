@@ -1,0 +1,63 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      # Values come from Settings → Secrets and variables → Actions → Variables
+      SITE_URL: ${{ vars.SITE_URL }}
+      SITE_NAME: ${{ vars.SITE_NAME }}
+      ENABLE_HOMECONTROL_PLUS: ${{ vars.ENABLE_HOMECONTROL_PLUS }}
+      LEGAL_NAME: ${{ vars.LEGAL_NAME }}
+      LEGAL_REPRESENTATIVE: ${{ vars.LEGAL_REPRESENTATIVE }}
+      LEGAL_STREET: ${{ vars.LEGAL_STREET }}
+      LEGAL_ADDRESS_EXTRA: ${{ vars.LEGAL_ADDRESS_EXTRA }}
+      LEGAL_POSTAL_CODE: ${{ vars.LEGAL_POSTAL_CODE }}
+      LEGAL_CITY: ${{ vars.LEGAL_CITY }}
+      LEGAL_COUNTRY: ${{ vars.LEGAL_COUNTRY }}
+      LEGAL_EMAIL: ${{ vars.LEGAL_EMAIL }}
+      LEGAL_PHONE: ${{ vars.LEGAL_PHONE }}
+      LEGAL_VAT_ID: ${{ vars.LEGAL_VAT_ID }}
+      LEGAL_REGISTER_NAME: ${{ vars.LEGAL_REGISTER_NAME }}
+      LEGAL_REGISTER_NUMBER: ${{ vars.LEGAL_REGISTER_NUMBER }}
+      LEGAL_RESPONSIBLE_FOR_CONTENT: ${{ vars.LEGAL_RESPONSIBLE_FOR_CONTENT }}
+      PRIVACY_SUPERVISORY_AUTHORITY: ${{ vars.PRIVACY_SUPERVISORY_AUTHORITY }}
+      HOSTING_PROVIDER_NAME: ${{ vars.HOSTING_PROVIDER_NAME }}
+      HOSTING_PROVIDER_LOCATION: ${{ vars.HOSTING_PROVIDER_LOCATION }}
+      LEGAL_LAST_UPDATED: ${{ vars.LEGAL_LAST_UPDATED }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
