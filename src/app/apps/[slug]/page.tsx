@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ImagePlaceholder, StoreBadgePlaceholder } from "@/components/placeholders";
@@ -105,7 +106,17 @@ export default async function ProductPage({ params }: Props) {
             <article className="story-card" key={step.title}>
               <span className="story-card__index">0{index + 1}</span>
               <div className="story-card__media">
-                <ImagePlaceholder label={step.title} note="Screenshot coming soon" />
+                {step.image ? (
+                  <Image
+                    alt={step.image.alt}
+                    className="story-card__shot"
+                    height={step.image.height}
+                    src={step.image.src}
+                    width={step.image.width}
+                  />
+                ) : (
+                  <ImagePlaceholder label={step.title} note="Screenshot coming soon" />
+                )}
               </div>
               <h3>{step.title}</h3>
               <p>{step.description}</p>
@@ -113,6 +124,39 @@ export default async function ProductPage({ params }: Props) {
           ))}
         </div>
       </section>
+
+      {product.gallery ? (
+        <section className="section" id="screenshots">
+          <div className="shell section-heading">
+            <div>
+              <p className="section-label">Screenshots</p>
+              <h2>{product.gallery.heading}</h2>
+            </div>
+            <p>{product.gallery.intro}</p>
+          </div>
+          <div className="shell">
+            <div
+              aria-label={`${product.navLabel ?? product.name} screenshots`}
+              className="shot-row"
+              role="region"
+              tabIndex={0}
+            >
+              {product.gallery.images.map((image) => (
+                <figure className="shot" key={image.src}>
+                  <Image
+                    alt={image.alt}
+                    className="shot__img"
+                    height={image.height}
+                    src={image.src}
+                    width={image.width}
+                  />
+                  <figcaption>{image.caption}</figcaption>
+                </figure>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <section className="section">
         <div className="shell section-heading">
@@ -326,6 +370,50 @@ export default async function ProductPage({ params }: Props) {
           ))}
         </div>
       </section>
+
+      {product.supportEmail || product.faqGroups?.length || product.links?.length ? (
+        <section className="section section--flush" id="help">
+          <div className="shell">
+            <div className="support-band">
+              <div>
+                <p className="section-label">Help</p>
+                <h2>Need a hand with {product.navLabel ?? product.name}?</h2>
+                <p>
+                  Find step-by-step answers in the help center, or write to us directly and
+                  we will help.
+                </p>
+                {product.links?.length ? (
+                  <ul className="support-band__links">
+                    {product.links.map((link) => (
+                      <li key={link.href}>
+                        <a href={link.href} rel="noopener">
+                          {link.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
+              </div>
+              <div className="support-band__actions">
+                {product.faqGroups?.length ? (
+                  <Link className="button" href="/faq">
+                    Browse the help &amp; FAQ
+                  </Link>
+                ) : null}
+                {product.supportEmail ? (
+                  <a
+                    className={product.faqGroups?.length ? "button button--secondary" : "button"}
+                    href={`mailto:${product.supportEmail}`}
+                  >
+                    Email support
+                  </a>
+                ) : null}
+              </div>
+            </div>
+            {product.disclaimer ? <p className="product-disclaimer">{product.disclaimer}</p> : null}
+          </div>
+        </section>
+      ) : null}
     </main>
   );
 }

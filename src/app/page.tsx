@@ -2,14 +2,15 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { AppCard } from "@/components/app-card";
-import { ImagePlaceholder, StoreBadgePlaceholder } from "@/components/placeholders";
-import { getFaqGroups, getProductCopy, getProducts } from "@/content/apps";
+import { PhoneScreen } from "@/components/phone-screen";
+import { StoreBadgePlaceholder } from "@/components/placeholders";
+import { getFaqGroups, getProductCopy, getProducts, getSupportEmail } from "@/content/apps";
 import { getLegalConfig } from "@/lib/legal";
 
 const brandIntro = "Apple-native apps that make smart homes simpler, clearer, and safer to use.";
 
 function SupportBand({ hasApps }: { hasApps: boolean }) {
-  const legalConfig = getLegalConfig();
+  const supportEmail = getSupportEmail(getLegalConfig().email);
   const hasFaq = getFaqGroups().length > 0;
 
   return (
@@ -31,10 +32,10 @@ function SupportBand({ hasApps }: { hasApps: boolean }) {
                 Browse the FAQ
               </Link>
             ) : null}
-            {legalConfig.email ? (
+            {supportEmail ? (
               <a
                 className={hasFaq ? "button button--secondary" : "button"}
-                href={`mailto:${legalConfig.email}`}
+                href={`mailto:${supportEmail}`}
               >
                 Email support
               </a>
@@ -107,14 +108,7 @@ export default function HomePage() {
             ) : null}
           </div>
           <div className="home-hero__visual">
-            <div className="phone-frame">
-              <ImagePlaceholder
-                label={`${flagshipLabel} home view`}
-                note="App screenshot coming soon"
-                tone="dark"
-                variant="phone"
-              />
-            </div>
+            <PhoneScreen label={`${flagshipLabel} home view`} product={flagship} />
             <Image
               alt=""
               aria-hidden="true"

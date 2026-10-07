@@ -6,16 +6,20 @@ import nextEnv from "@next/env";
 
 nextEnv.loadEnvConfig(process.cwd(), false);
 
-const readFlag = (name) =>
-  ((process.env[name]?.trim() || process.env[`NEXT_PUBLIC_${name}`]?.trim()) ?? "") === "true";
+const readFlag = (name, fallback) => {
+  const value = process.env[name]?.trim() || process.env[`NEXT_PUBLIC_${name}`]?.trim() || "";
+
+  return value === "" ? fallback : value === "true";
+};
 
 const products = [
-  { flag: "ENABLE_EASY_CONTROL", paths: ["out/apps/easy-control"] },
-  { flag: "ENABLE_HOMECONTROL_PLUS", paths: ["out/apps/homecontrol-plus"] },
+  { flag: "ENABLE_ROOMTONE", fallback: true, paths: ["out/apps/roomtone"] },
+  { flag: "ENABLE_EASY_CONTROL", fallback: false, paths: ["out/apps/easy-control"] },
+  { flag: "ENABLE_HOMECONTROL_PLUS", fallback: false, paths: ["out/apps/homecontrol-plus"] },
 ];
 
-for (const { flag, paths } of products) {
-  if (readFlag(flag)) continue;
+for (const { flag, fallback, paths } of products) {
+  if (readFlag(flag, fallback)) continue;
 
   for (const path of paths) {
     await rm(path, { recursive: true, force: true });

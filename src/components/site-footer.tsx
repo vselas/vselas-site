@@ -1,13 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
 
-import { getFaqGroups, getProducts } from "@/content/apps";
+import { getFaqGroups, getProducts, getSupportEmail } from "@/content/apps";
 import { getLegalConfig } from "@/lib/legal";
 import { getSiteConfig } from "@/lib/site";
 
 export function SiteFooter() {
   const products = getProducts();
-  const legalConfig = getLegalConfig();
+  const supportEmail = getSupportEmail(getLegalConfig().email);
   const siteConfig = getSiteConfig();
 
   return (
@@ -36,7 +36,7 @@ export function SiteFooter() {
             </Link>
           ))}
           {getFaqGroups().length > 0 ? <Link href="/faq">FAQ</Link> : null}
-          {legalConfig.email ? <a href={`mailto:${legalConfig.email}`}>Support</a> : null}
+          {supportEmail ? <a href={`mailto:${supportEmail}`}>Support</a> : null}
           <Link href="/impressum">Impressum</Link>
           <Link href="/datenschutz">Datenschutz</Link>
         </div>

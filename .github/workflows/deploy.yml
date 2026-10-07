@@ -23,6 +23,7 @@ jobs:
       # Values come from Settings → Environments → github-pages → Environment variables
       SITE_URL: ${{ vars.SITE_URL }}
       SITE_NAME: ${{ vars.SITE_NAME }}
+      ENABLE_ROOMTONE: ${{ vars.ENABLE_ROOMTONE }}
       ENABLE_EASY_CONTROL: ${{ vars.ENABLE_EASY_CONTROL }}
       ENABLE_HOMECONTROL_PLUS: ${{ vars.ENABLE_HOMECONTROL_PLUS }}
       LEGAL_NAME: ${{ vars.LEGAL_NAME }}

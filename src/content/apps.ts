@@ -1,25 +1,39 @@
 import type { StoreBadgeKind } from "@/components/placeholders";
 import type { FaqGroup } from "@/content/faq";
-import { easyControlFaq } from "@/content/faq";
+import { easyControlFaq, roomToneFaq } from "@/content/faq";
 import type { FeatureFlagName } from "@/lib/feature-flags";
 import { getFeatureFlags } from "@/lib/feature-flags";
+
+export type ProductImage = {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+};
 
 export type ProductModule = {
   name: string;
   role: string;
   summary: string;
   bullets: string[];
-  asset: {
-    src: string;
-    alt: string;
-    width: number;
-    height: number;
-  };
+  asset: ProductImage;
+};
+
+export type ProductGallery = {
+  heading: string;
+  intro: string;
+  images: (ProductImage & { caption: string })[];
+};
+
+export type ProductLink = {
+  label: string;
+  href: string;
 };
 
 export type StoryStep = {
   title: string;
   description: string;
+  image?: ProductImage;
 };
 
 export type FeatureGroup = {
@@ -122,9 +136,345 @@ export type Product = {
   faq: ProductFaq[];
   faqGroups?: FaqGroup[];
   copy?: Partial<ProductPageCopy>;
+  heroImage?: ProductImage;
+  gallery?: ProductGallery;
+  supportEmail?: string;
+  links?: ProductLink[];
+  disclaimer?: string;
+};
+
+const roomToneIcon: ProductImage = {
+  src: "/apps/roomtone/app-icon.webp",
+  alt: "RoomTone app icon",
+  width: 512,
+  height: 512,
 };
 
 export const products: Product[] = [
+  {
+    slug: "roomtone",
+    name: "RoomTone",
+    navLabel: "RoomTone",
+    category: "Family audio",
+    tagline: "Your child's own speaker.",
+    shortSummary:
+      "Your child runs their own speaker – and only that one. With audio drama series, bedtime and a PIN for parents.",
+    longSummary:
+      "RoomTone turns your child's room into their own music corner. They control the speaker in their room themselves – and only that one. You decide which speakers they may use, the volume limit you set in the Sonos app applies here too, bedtime mode narrows the controls at night, and your PIN protects every setting. Compatible with Sonos.",
+    status: "Coming soon",
+    featureFlag: "roomTone",
+    faqGroups: roomToneFaq,
+    supportEmail: "roomtone@vselas.de",
+    links: [
+      { label: "Privacy policy", href: "https://roomtone.vselas.de/privacy" },
+      { label: "Datenschutz (Deutsch)", href: "https://roomtone.vselas.de/de/privacy" },
+      { label: "Hilfe auf Deutsch", href: "https://roomtone.vselas.de/de/support" },
+    ],
+    disclaimer:
+      "RoomTone is compatible with Sonos, but it is not a Sonos product and is not certified by Sonos. Sonos is a trademark of Sonos, Inc.",
+    copy: {
+      homeBenefitsHeading: "Their speaker, your rules.",
+      modulesIntro:
+        "RoomTone is one app with two sides: what your child sees, and what only you can change.",
+      storyHeading: "From setup to the first song.",
+      securityHeading: "Private by design, protected by your PIN.",
+      securityIntro:
+        "No account, no server, no ads. RoomTone talks to your speakers over your own Wi-Fi, and your PIN guards every setting.",
+      domainsHeading: "What you need and where the music comes from.",
+      downloadsHeading: "Get RoomTone.",
+      downloadsIntro:
+        "RoomTone is coming to the App Store for iPhone and iPad. Your speakers don't need anything new.",
+    },
+    platforms: ["iPhone", "iPad", "Compatible with Sonos"],
+    audience: ["Parents", "Families", "Children's rooms", "Wall tablets"],
+    proofPoints: [
+      { label: "Speakers", value: "Only the ones you allow" },
+      { label: "Account", value: "None needed" },
+      { label: "Privacy", value: "No ads, no tracking" },
+      { label: "Settings", value: "Protected by PIN" },
+    ],
+    heroHighlights: [
+      "Your child controls only the speakers you allow",
+      "The volume limit from the Sonos app applies",
+      "Bedtime mode with sleep favorites and a timer",
+      "No account, no ads, no tracking",
+    ],
+    heroImage: {
+      src: "/apps/roomtone/screen-home.webp",
+      alt: "RoomTone home screen with recently played items, favorites and playlists",
+      width: 600,
+      height: 1304,
+    },
+    modules: [
+      {
+        name: "Child's view",
+        role: "For your child",
+        summary:
+          "Big covers, one tap to play, and nothing else in the way. Your child sees only the speakers, favorites and playlists you allow.",
+        bullets: [
+          "Big covers of favorites and playlists, recently played at the top",
+          "Play, pause, skip and volume with one tap",
+          "Search by typing or speaking – voice input stays on the device",
+          "Audio drama series: the next episode, always from the start",
+        ],
+        asset: roomToneIcon,
+      },
+      {
+        name: "Parental settings",
+        role: "For you, behind your PIN",
+        summary:
+          "Everything your child shouldn't change sits behind a PIN that only you know.",
+        bullets: [
+          "Choose which speakers your child may control",
+          "Hide single favorites and playlists, such as your own",
+          "Set bedtime, with sleep favorites and a timer",
+          "Turn on kiosk mode for a wall tablet, with a night light",
+        ],
+        asset: roomToneIcon,
+      },
+    ],
+    story: [
+      {
+        title: "Set it up on your child's device",
+        description:
+          "Open RoomTone, choose a parental PIN, allow access to the local network and pick the speakers your child may control.",
+      },
+      {
+        title: "Decide what your child sees",
+        description:
+          "Save favorites and playlists in the Sonos app, then hide any you'd rather keep to yourself, such as your own.",
+        image: {
+          src: "/apps/roomtone/screen-visible.webp",
+          alt: "Parental settings screen \"What your child sees\" with a switch for every favorite and playlist",
+          width: 600,
+          height: 1304,
+        },
+      },
+      {
+        title: "Your child plays on their own",
+        description:
+          "Big covers, one tap to play, search by typing or speaking, and a volume that never goes past your limit.",
+        image: {
+          src: "/apps/roomtone/screen-player.webp",
+          alt: "Player with a large cover, play controls, a Next episode button and an Afterwards queue",
+          width: 600,
+          height: 1304,
+        },
+      },
+      {
+        title: "Bedtime takes over at night",
+        description:
+          "During the time you set, your child can only pause, turn it down or start the sleep favorites you chose, with a timer.",
+        image: {
+          src: "/apps/roomtone/screen-bedtime.webp",
+          alt: "Bedtime screen with a moon, the words Good night, the time, a Quieter button and sleep favorites",
+          width: 600,
+          height: 1304,
+        },
+      },
+    ],
+    gallery: {
+      heading: "RoomTone on iPhone and iPad.",
+      intro:
+        "From the child's home screen to a wall tablet at night. All screens show invented demo content.",
+      images: [
+        {
+          src: "/apps/roomtone/screen-home.webp",
+          alt: "RoomTone home screen with recently played items, favorites and playlists",
+          width: 600,
+          height: 1304,
+          caption: "Home: recently played, favorites, playlists",
+        },
+        {
+          src: "/apps/roomtone/screen-player.webp",
+          alt: "Player with a large cover, play controls, a Next episode button and an Afterwards queue",
+          width: 600,
+          height: 1304,
+          caption: "Player: next episode and afterwards",
+        },
+        {
+          src: "/apps/roomtone/screen-search.webp",
+          alt: "Search screen with the keyboard open and matching favorites",
+          width: 600,
+          height: 1304,
+          caption: "Search by typing or speaking",
+        },
+        {
+          src: "/apps/roomtone/screen-afterwards.webp",
+          alt: "Menu on a cover with the choices Play now and Play afterwards",
+          width: 600,
+          height: 1304,
+          caption: "Touch and hold: play now or afterwards",
+        },
+        {
+          src: "/apps/roomtone/screen-visible.webp",
+          alt: "Parental settings screen \"What your child sees\" with a switch for every favorite and playlist",
+          width: 600,
+          height: 1304,
+          caption: "Parental settings: what your child sees",
+        },
+        {
+          src: "/apps/roomtone/screen-bedtime.webp",
+          alt: "Bedtime screen with a moon, the words Good night, the time, a Quieter button and sleep favorites",
+          width: 600,
+          height: 1304,
+          caption: "Bedtime: only pause, quieter, sleep favorites",
+        },
+        {
+          src: "/apps/roomtone/ipad-home.webp",
+          alt: "RoomTone home screen on an iPad",
+          width: 800,
+          height: 1067,
+          caption: "iPad: home",
+        },
+        {
+          src: "/apps/roomtone/ipad-player.webp",
+          alt: "RoomTone player on an iPad",
+          width: 800,
+          height: 1067,
+          caption: "iPad: player",
+        },
+        {
+          src: "/apps/roomtone/ipad-kiosk.webp",
+          alt: "Rest screen of kiosk mode with a large cover, the title and the time",
+          width: 800,
+          height: 1067,
+          caption: "Kiosk mode: rest screen for a wall tablet",
+        },
+      ],
+    },
+    featureGroups: [
+      {
+        title: "Their room, their music",
+        intro: "Your child controls the speaker in their room themselves, and only that one.",
+        bullets: [
+          "Big covers of favorites and playlists, recently played at the top",
+          "Play, pause, skip and volume with one tap",
+          "Search by typing or speaking – voice input stays on the device",
+          "Audio drama series: the next episode, always from the start",
+        ],
+      },
+      {
+        title: "More music, on your terms",
+        intro: "Search beyond your favorites only when you switch it on.",
+        bullets: [
+          "Search Apple Music and Spotify too, if you like",
+          "Explicit songs and albums only show if you allow them",
+          "Playlists and stations only show if you allow them",
+          "Everything plays with the accounts of your Sonos system",
+          "“Play afterwards” lines up several things at the end",
+        ],
+      },
+      {
+        title: "You stay in charge",
+        intro: "You decide what your child can reach, and your PIN keeps it that way.",
+        bullets: [
+          "You decide which speakers your child may control",
+          "The volume limit you set in the Sonos app applies here too",
+          "Hide single favorites and playlists, such as your own",
+          "Your PIN protects the settings",
+        ],
+      },
+      {
+        title: "Made for bedtime and the wall",
+        intro: "Quiet evenings, and a tablet that stays where you put it.",
+        bullets: [
+          "Bedtime: only pause, quieter and sleep favorites with a timer",
+          "Kiosk mode for a wall tablet, with a night light",
+          "Friendly messages instead of technical errors",
+        ],
+      },
+    ],
+    supportedDomains: [
+      "Sonos speakers on the current Sonos software (S2)",
+      "iPhone or iPad with iOS or iPadOS 18 or later, on the same Wi-Fi as the speakers",
+      "Your Sonos favorites and Sonos playlists",
+      "Audio drama series that you save once as a favorite",
+      "Optional search in Apple Music and Spotify, if you turn it on",
+    ],
+    securityHighlights: [
+      "A parental PIN protects every setting",
+      "Your child sees only the speakers you chose",
+      "No account and no server: RoomTone talks to your speakers over your home Wi-Fi",
+      "No ads, no tracking – settings and history stay on the device",
+      "Voice search is understood on the device, and nothing is recorded",
+      "Explicit songs, playlists and stations from music search only show if you allow them",
+    ],
+    setup: [
+      {
+        title: "Check what you need",
+        detail:
+          "Sonos speakers on the current Sonos software (S2), and an iPhone or iPad with iOS or iPadOS 18 or later on the same Wi-Fi.",
+      },
+      {
+        title: "Set up RoomTone on your child's device",
+        detail: "Open RoomTone and choose “Set up”. Then choose a parental PIN.",
+      },
+      {
+        title: "Allow the local network",
+        detail:
+          "RoomTone needs access to the local network to find your speakers. Your iPhone or iPad asks once.",
+      },
+      {
+        title: "Choose the speakers and fill your favorites",
+        detail:
+          "Pick the speakers your child may control. Music comes from your Sonos favorites and Sonos playlists, so save what your child may listen to there.",
+      },
+      {
+        title: "Keep your child in RoomTone",
+        detail:
+          "In Screen Time, set “Deleting Apps: Don't Allow”, and block the Sonos app if you like. On a wall tablet, turn on kiosk mode and use Guided Access.",
+      },
+    ],
+    downloads: [
+      {
+        label: "iPhone and iPad",
+        description:
+          "RoomTone is coming to the App Store for iPhone and iPad with iOS or iPadOS 18 or later. Look for RoomTone Remote.",
+        status: "Coming soon",
+        badge: "app-store",
+      },
+      {
+        label: "Your speakers",
+        description:
+          "Nothing to install. RoomTone talks to your Sonos speakers over your home Wi-Fi; they only need the current Sonos software (S2).",
+        status: "Nothing to install",
+      },
+    ],
+    futureFit: [],
+    faq: [
+      {
+        question: "Do I need a Sonos account or a RoomTone account?",
+        answer:
+          "No. RoomTone talks to your speakers directly over your home Wi-Fi. There is no RoomTone account, no Sonos sign-in and no server.",
+      },
+      {
+        question: "What does RoomTone collect?",
+        answer:
+          "Nothing. No ads, no tracking, no analytics. Settings, PIN and history stay on the device. Only if you turn on the Apple Music or Spotify search do the search words go to that service so it can answer; RoomTone doesn't keep them.",
+      },
+      {
+        question: "Can my child control all my speakers?",
+        answer:
+          "No, only the speakers you allow – usually the one in their room. Everything else stays out of reach.",
+      },
+      {
+        question: "Which devices does RoomTone run on?",
+        answer:
+          "iPhone and iPad with iOS or iPadOS 18 or later. A tablet on the wall can run it in kiosk mode, with a night light at bedtime.",
+      },
+      {
+        question: "Does RoomTone work when we're away from home?",
+        answer:
+          "RoomTone controls your speakers over the home Wi-Fi. When the device isn't at home, your child sees a friendly message instead of an error.",
+      },
+      {
+        question: "Is RoomTone made by Sonos?",
+        answer:
+          "No. RoomTone is compatible with Sonos, but it is not a Sonos product and is not certified by Sonos. Sonos is a trademark of Sonos, Inc.",
+      },
+    ],
+  },
   {
     slug: "easy-control",
     name: "Easy Control for Home Assistant",
@@ -841,6 +1191,10 @@ export function getProductBySlug(slug: string) {
 
 export function getFaqGroups() {
   return getProducts().flatMap((product) => product.faqGroups ?? []);
+}
+
+export function getSupportEmail(fallback: string) {
+  return getProducts().find((product) => product.supportEmail)?.supportEmail ?? fallback;
 }
 
 const defaultProductCopy: ProductPageCopy = {

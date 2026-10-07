@@ -1,6 +1,8 @@
 import Image from "next/image";
+import Link from "next/link";
 
-import { ImagePlaceholder, StoreBadgePlaceholder } from "@/components/placeholders";
+import { StoreBadgePlaceholder } from "@/components/placeholders";
+import { PhoneScreen } from "@/components/phone-screen";
 import type { Product } from "@/content/apps";
 
 export function ProductHero({ product }: { product: Product }) {
@@ -33,6 +35,11 @@ export function ProductHero({ product }: { product: Product }) {
                 {product.companionHowTo.buttonLabel}
               </a>
             ) : null}
+            {product.faqGroups?.length ? (
+              <Link className="button button--secondary" href="/faq">
+                Help &amp; FAQ
+              </Link>
+            ) : null}
           </div>
           {storeBadges.length > 0 ? (
             <div className="store-badge-row">
@@ -45,14 +52,7 @@ export function ProductHero({ product }: { product: Product }) {
           ) : null}
         </div>
         <div className="product-hero__visual">
-          <div className="phone-frame">
-            <ImagePlaceholder
-              label={`${primaryModule.name} home view`}
-              note="App screenshot coming soon"
-              tone="dark"
-              variant="phone"
-            />
-          </div>
+          <PhoneScreen label={`${primaryModule.name} home view`} product={product} />
           <Image
             alt=""
             aria-hidden="true"

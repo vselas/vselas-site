@@ -26,6 +26,7 @@ folder to GitHub Pages.
 | `LEGAL_CITY` | yes | City |
 | `LEGAL_EMAIL` | yes | Contact and support e-mail |
 | `SITE_NAME` | no | Defaults to `vselas Apps` |
+| `ENABLE_ROOMTONE` | no | Product switch, defaults to **on**. Set `false` to hide RoomTone completely |
 | `ENABLE_EASY_CONTROL` | no | Product switch, defaults to off. Only `true` publishes the product |
 | `ENABLE_HOMECONTROL_PLUS` | no | Product switch, defaults to off. Only `true` publishes the product |
 | `LEGAL_REPRESENTATIVE`, `LEGAL_ADDRESS_EXTRA`, `LEGAL_COUNTRY`, `LEGAL_PHONE`, `LEGAL_VAT_ID`, `LEGAL_REGISTER_NAME`, `LEGAL_REGISTER_NUMBER`, `LEGAL_RESPONSIBLE_FOR_CONTENT`, `PRIVACY_SUPERVISORY_AUTHORITY`, `LEGAL_LAST_UPDATED` | no | Optional Impressum / Datenschutz details |

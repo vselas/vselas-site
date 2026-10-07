@@ -321,11 +321,13 @@ p {
 
 .media-placeholder--wide {
   aspect-ratio: 16 / 10;
+  min-height: 0;
   max-height: 300px;
 }
 
 .media-placeholder--square {
   aspect-ratio: 1;
+  min-height: 0;
 }
 
 .media-placeholder--phone {
@@ -1144,6 +1146,20 @@ p {
   padding: 26px;
 }
 
+.companion-guide {
+  overflow-wrap: anywhere;
+}
+
+.companion-guide__steps,
+.companion-guide__actions,
+.action-card {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.action-card__name {
+  max-width: 100%;
+}
+
 .companion-step h3,
 .action-card h3,
 .companion-support h3 {
@@ -1531,6 +1547,88 @@ p {
   color: var(--ink);
 }
 
+/* ------------------------------------------------------------- screenshots */
+
+.phone-frame__shot {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 34px;
+}
+
+.story-card__media {
+  display: grid;
+  justify-items: center;
+}
+
+.story-card__shot {
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  border: 1px solid var(--line-strong);
+  border-radius: 26px;
+  box-shadow: var(--shadow-m);
+}
+
+.shot-row {
+  display: flex;
+  gap: 20px;
+  padding: 8px 4px 28px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+}
+
+.shot {
+  display: grid;
+  flex: none;
+  gap: 12px;
+  margin: 0;
+  scroll-snap-align: start;
+}
+
+.shot__img {
+  width: auto;
+  height: 440px;
+  border: 1px solid var(--line-strong);
+  border-radius: 28px;
+  box-shadow: var(--shadow-m);
+}
+
+.shot figcaption {
+  max-width: 24ch;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.support-band__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  padding: 0;
+  margin: 20px 0 0;
+  list-style: none;
+}
+
+.support-band__links a {
+  color: #cfe3ff;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.support-band__links a:hover {
+  color: #fff;
+}
+
+.product-disclaimer {
+  max-width: 72ch;
+  margin-top: 22px;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
 /* --------------------------------------------------------------- not found */
 
 .not-found {
@@ -1594,7 +1692,7 @@ p {
   .security-band,
   .two-column,
   .site-footer__inner {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .app-feature {
@@ -1610,7 +1708,7 @@ p {
   .download-grid,
   .faq-grid,
   .faq-groups {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .support-band__actions,
