@@ -26,8 +26,6 @@ export function getLegalConfig() {
     supervisoryAuthority:
       readValue("PRIVACY_SUPERVISORY_AUTHORITY") ||
       "Zustaendige Datenschutzaufsichtsbehoerde Ihres Bundeslandes",
-    hostingProviderName: readValue("HOSTING_PROVIDER_NAME"),
-    hostingProviderLocation: readValue("HOSTING_PROVIDER_LOCATION"),
     lastUpdated: readValue("LEGAL_LAST_UPDATED") || legalDateFormatter.format(new Date()),
   };
 }

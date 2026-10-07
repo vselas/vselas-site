@@ -1,24 +1,17 @@
-import { getFeatureFlags } from "@/lib/feature-flags";
-
 const fallbackUrl = "https://example.com";
 
-const baseDescription =
-  "Apple-native apps that help people use smart homes more easily, starting with Easy Control for simple guest access.";
+const description =
+  "Apple-native apps that make smart homes simpler, clearer, and safer to use.";
 
 function readValue(name: string) {
   return process.env[name]?.trim() ?? "";
 }
 
 export function getSiteConfig() {
-  const featureFlags = getFeatureFlags();
-
   return {
     name: readValue("SITE_NAME") || "vselas Apps",
     title: "Apps for easier smart homes",
-    description:
-      featureFlags.homeControlPlus
-        ? `${baseDescription} HomeControl+ can be published as an owner-facing macOS control center when it is ready.`
-        : baseDescription,
+    description,
     url: readValue("SITE_URL") || fallbackUrl,
     links: {
       github: "https://github.com/dvselas",
@@ -26,6 +19,11 @@ export function getSiteConfig() {
   };
 }
 
+// The site is exported with `trailingSlash: true`, so page URLs end in "/".
+// Canonical, Open Graph and sitemap URLs must use that exact form.
 export function absoluteUrl(path = "/") {
-  return new URL(path, getSiteConfig().url).toString();
+  const isFile = /\.[a-z0-9]+$/i.test(path);
+  const normalizedPath = isFile || path.endsWith("/") ? path : `${path}/`;
+
+  return new URL(normalizedPath, getSiteConfig().url).toString();
 }

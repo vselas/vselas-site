@@ -8,7 +8,7 @@ export type FaqGroup = {
   items: FaqItem[];
 };
 
-export const siteFaq: FaqGroup[] = [
+export const easyControlFaq: FaqGroup[] = [
   {
     title: "For guests",
     items: [

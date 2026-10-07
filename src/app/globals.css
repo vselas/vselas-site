@@ -605,6 +605,14 @@ p {
   color: #fff;
 }
 
+.home-hero.home-hero--solo {
+  padding-bottom: 104px;
+}
+
+.home-hero__inner--solo {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .home-hero__visual {
   position: relative;
   display: grid;
@@ -1521,6 +1529,23 @@ p {
   border-left: 4px solid var(--accent);
   background: #e8f1ff;
   color: var(--ink);
+}
+
+/* --------------------------------------------------------------- not found */
+
+.not-found {
+  max-width: 640px;
+  padding: 48px 0 24px;
+}
+
+.not-found h1 {
+  margin-bottom: 18px;
+  font-size: clamp(2rem, 4.4vw, 3rem);
+}
+
+.not-found p:not(.section-label) {
+  color: var(--muted);
+  font-size: 1.04rem;
 }
 
 /* ----------------------------------------------------------- media queries */

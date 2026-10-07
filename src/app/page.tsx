@@ -3,14 +3,77 @@ import Image from "next/image";
 
 import { AppCard } from "@/components/app-card";
 import { ImagePlaceholder, StoreBadgePlaceholder } from "@/components/placeholders";
-import { getProducts } from "@/content/apps";
+import { getFaqGroups, getProductCopy, getProducts } from "@/content/apps";
 import { getLegalConfig } from "@/lib/legal";
+
+const brandIntro = "Apple-native apps that make smart homes simpler, clearer, and safer to use.";
+
+function SupportBand({ hasApps }: { hasApps: boolean }) {
+  const legalConfig = getLegalConfig();
+  const hasFaq = getFaqGroups().length > 0;
+
+  return (
+    <section className="section" id="app-store-support">
+      <div className="shell">
+        <div className="support-band">
+          <div>
+            <p className="section-label">{hasApps ? "For App Store visitors" : "Support"}</p>
+            <h2>{hasApps ? "Quick answers and direct help." : "Questions? We are happy to help."}</h2>
+            <p>
+              {hasFaq
+                ? "Most questions are already answered in the FAQ. For everything else, send us a short email and we will help directly."
+                : "Send us a short email with what you tried and what you expected, and we will help directly."}
+            </p>
+          </div>
+          <div className="support-band__actions">
+            {hasFaq ? (
+              <Link className="button" href="/faq">
+                Browse the FAQ
+              </Link>
+            ) : null}
+            {legalConfig.email ? (
+              <a
+                className={hasFaq ? "button button--secondary" : "button"}
+                href={`mailto:${legalConfig.email}`}
+              >
+                Email support
+              </a>
+            ) : null}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 export default function HomePage() {
   const products = getProducts();
   const flagship = products[0];
+
+  if (!flagship) {
+    return (
+      <main>
+        <section className="home-hero home-hero--solo">
+          <div className="home-hero__glow" aria-hidden="true" />
+          <div className="shell home-hero__inner home-hero__inner--solo">
+            <div className="home-hero__copy">
+              <p className="hero-eyebrow">Apps by Deno von Selasinsky</p>
+              <h1>
+                Smart homes that feel <span className="text-gradient">welcoming</span>.
+              </h1>
+              <p className="hero-copy">{brandIntro} The first app is coming soon.</p>
+            </div>
+          </div>
+        </section>
+
+        <SupportBand hasApps={false} />
+      </main>
+    );
+  }
+
   const hasCompanion = products.length > 1;
-  const legalConfig = getLegalConfig();
+  const copy = getProductCopy(flagship);
+  const flagshipLabel = flagship.navLabel ?? flagship.name;
   const primaryAsset = flagship.modules[0].asset;
   const storeBadges = flagship.downloads.filter((download) => download.badge);
 
@@ -24,13 +87,10 @@ export default function HomePage() {
             <h1>
               Smart homes that feel <span className="text-gradient">welcoming</span>.
             </h1>
-            <p className="hero-copy">
-              Apple-native apps for smart homes, built to make everyday control and
-              guest access feel simple, understandable, and safe.
-            </p>
+            <p className="hero-copy">{brandIntro}</p>
             <div className="button-row">
               <Link className="button" href={`/apps/${flagship.slug}`}>
-                Explore {flagship.navLabel ?? flagship.name}
+                Explore {flagshipLabel}
               </Link>
               <Link className="button button--secondary" href="#app-store-support">
                 App Store support
@@ -49,7 +109,7 @@ export default function HomePage() {
           <div className="home-hero__visual">
             <div className="phone-frame">
               <ImagePlaceholder
-                label={`Guest view of ${flagship.navLabel ?? flagship.name}`}
+                label={`${flagshipLabel} home view`}
                 note="App screenshot coming soon"
                 tone="dark"
                 variant="phone"
@@ -125,8 +185,8 @@ export default function HomePage() {
       <section className="section">
         <div className="shell section-heading">
           <div>
-            <p className="section-label">How {flagship.navLabel ?? flagship.name} helps</p>
-            <h2>A better handoff for guests.</h2>
+            <p className="section-label">How {flagshipLabel} helps</p>
+            <h2>{copy.homeBenefitsHeading}</h2>
           </div>
         </div>
         <div className="shell benefit-grid">
@@ -146,9 +206,7 @@ export default function HomePage() {
             <h2>{hasCompanion ? "Choose the app that fits your home." : "Available app"}</h2>
           </div>
           <p>
-            {hasCompanion
-              ? "Each app has its own page with practical use cases, setup notes, and support information."
-              : "Easy Control is the first public app. Each app page covers practical use cases, setup notes, and support information."}
+            Each app page covers practical use cases, setup notes, and support information.
           </p>
         </div>
         <div className="shell app-grid">
@@ -158,31 +216,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section" id="app-store-support">
-        <div className="shell">
-          <div className="support-band">
-            <div>
-              <p className="section-label">For App Store visitors</p>
-              <h2>Quick answers and direct help.</h2>
-              <p>
-                Most questions about invites, pairing, and access are already answered
-                in the FAQ. For everything else, send us a short email and we will
-                help directly.
-              </p>
-            </div>
-            <div className="support-band__actions">
-              <Link className="button" href="/faq">
-                Browse the FAQ
-              </Link>
-              {legalConfig.email ? (
-                <a className="button button--secondary" href={`mailto:${legalConfig.email}`}>
-                  Email support
-                </a>
-              ) : null}
-            </div>
-          </div>
-        </div>
-      </section>
+      <SupportBand hasApps />
     </main>
   );
 }

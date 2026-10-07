@@ -224,18 +224,15 @@ The first implementation should feel intentional and a little more premium than 
 
 ## Release engineering requirements
 
-The user explicitly called out Docker and release automation as essential.
+The site is a fully static export (`output: "export"`) published on GitHub Pages
+through `.github/workflows/deploy.yml`. It replaced the earlier Docker/Traefik
+release path.
 
-The project should therefore keep:
+- every push to `main` builds and deploys the site
+- site and legal configuration is read from GitHub Actions variables at build time
+- the custom domain is defined by `public/CNAME`
 
-- standalone Next.js output
-- multi-stage Dockerfile
-- production `docker-compose.yml`
-- development `docker-compose.dev.yml`
-- `build-and-push.sh` for multi-arch image publishing
-- environment-driven Traefik routing and registry configuration
-
-The implementation in this repo follows that pattern.
+See `deployment_workflow.md` for the setup and release steps.
 
 ## Near-term next steps
 

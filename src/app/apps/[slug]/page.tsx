@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 
 import { ImagePlaceholder, StoreBadgePlaceholder } from "@/components/placeholders";
 import { ProductHero } from "@/components/product-hero";
-import { getProductBySlug, getProducts } from "@/content/apps";
+import { getProductBySlug, getProductCopy, getProducts } from "@/content/apps";
 import { absoluteUrl } from "@/lib/site";
 
 type Props = {
@@ -13,8 +13,12 @@ type Props = {
 
 export const dynamicParams = false;
 
+// A static export needs at least one param. Without any enabled product, a
+// placeholder slug is generated that renders the 404 page and is not indexed.
 export function generateStaticParams() {
-  return getProducts().map((product) => ({ slug: product.slug }));
+  const slugs = getProducts().map((product) => product.slug);
+
+  return (slugs.length > 0 ? slugs : ["unavailable"]).map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -22,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const product = getProductBySlug(slug);
 
   if (!product) {
-    return {};
+    return { robots: { index: false } };
   }
 
   return {
@@ -48,6 +52,7 @@ export default async function ProductPage({ params }: Props) {
   }
 
   const companionHowTo = product.companionHowTo;
+  const copy = getProductCopy(product);
 
   return (
     <main className="page-main">
@@ -59,10 +64,7 @@ export default async function ProductPage({ params }: Props) {
             <p className="section-label">Parts of the app</p>
             <h2>What you install and where you use it.</h2>
           </div>
-          <p>
-            Easy Control has one part for the person sharing access and one part for
-            the guest. This section shows what each one is for.
-          </p>
+          <p>{copy.modulesIntro}</p>
         </div>
         <div className="shell module-grid">
           {product.modules.map((module) => (
@@ -95,7 +97,7 @@ export default async function ProductPage({ params }: Props) {
         <div className="shell section-heading">
           <div>
             <p className="section-label">How it works</p>
-            <h2>From invite to everyday use.</h2>
+            <h2>{copy.storyHeading}</h2>
           </div>
         </div>
         <div className="shell story-grid">
@@ -138,12 +140,8 @@ export default async function ProductPage({ params }: Props) {
         <div className="shell security-band">
           <div>
             <p className="section-label">Why it feels safe</p>
-            <h2>Designed to feel simple for guests and reassuring for hosts.</h2>
-            <p>
-              The important part is not the technical wording. It is the feeling that
-              access stays limited, sensitive actions stay protected, and the host stays
-              in control.
-            </p>
+            <h2>{copy.securityHeading}</h2>
+            <p>{copy.securityIntro}</p>
           </div>
           <ul className="detail-list detail-list--contrast">
             {product.securityHighlights.map((item) => (
@@ -157,7 +155,7 @@ export default async function ProductPage({ params }: Props) {
         <div className="shell two-column">
           <div>
             <p className="section-label">What it works with</p>
-            <h2>Devices and information you can share.</h2>
+            <h2>{copy.domainsHeading}</h2>
             <ul className="detail-list">
               {product.supportedDomains.map((item) => (
                 <li key={item}>{item}</li>
@@ -183,13 +181,9 @@ export default async function ProductPage({ params }: Props) {
         <div className="shell section-heading">
           <div>
             <p className="section-label">What to install</p>
-            <h2>What each person needs during setup and the visit.</h2>
+            <h2>{copy.downloadsHeading}</h2>
           </div>
-          <p>
-            One part is for the person sharing access, and one part is for the guest
-            who uses it. This makes it easier to understand what to install and what to
-            open during a visit.
-          </p>
+          <p>{copy.downloadsIntro}</p>
         </div>
         <div className="shell download-grid">
           {product.downloads.map((download) => (

@@ -16,6 +16,7 @@ export function generateMetadata(): Metadata {
       template: `%s | ${siteConfig.name}`,
     },
     description: siteConfig.description,
+    referrer: "strict-origin-when-cross-origin",
     openGraph: {
       title: `${siteConfig.name} | ${siteConfig.title}`,
       description: siteConfig.description,

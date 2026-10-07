@@ -1,103 +1,55 @@
 # App Presentation
 
-Next.js product site for a growing family of Apple platform apps and Home Assistant tools.
+Product and help site for a growing family of Apple platform apps and Home Assistant tools, published as a static site on GitHub Pages.
 
-The first launch story is **Easy Control for Home Assistant**, a two-part product made up of:
-
-- an iPhone app for guests
-- a Home Assistant integration for pass creation, policy, and audit events
-
-## What is already included
+## What is included
 
 - Reusable app catalogue and per-product detail pages
-- Initial product messaging for Easy Control based on the actual iOS and Home Assistant repos
-- Feature-flagged support for unreleased products such as HomeControl+
+- FAQ page that is built from the FAQ of the enabled products
+- Visible placeholders for screenshots and store/download links
 - German legal pages for `Impressum` and `Datenschutz`
-- Production-oriented Next.js configuration with standalone output
-- Docker, Compose, and multi-arch image publishing scaffold
-- Research and planning document for future product additions
+- One feature flag per product (`ENABLE_*`): a product that is not enabled is hidden completely
+- Neutral "coming soon" home page while no product is enabled
+- Static export, deployed to GitHub Pages by a GitHub Actions workflow
 
 ## Local development
 
 ```bash
 npm install
+cp .env.example .env   # fill in the values
 npm run dev
 ```
 
 Open `http://localhost:3000`.
 
-## Quality checks
+## Quality checks and local preview of the export
 
 ```bash
 npm run lint
-npm run build
+npm run build      # static site in ./out
+npm run preview    # serve ./out locally
 ```
 
-## Docker
+## Deployment
 
-Development:
+Every push to `main` builds and publishes the site. Setup, required variables and
+limitations of static hosting are described in [deployment_workflow.md](deployment_workflow.md).
 
-```bash
-docker compose -f docker-compose.dev.yml up --build
-```
+## Configuration
 
-Production-style local run:
+All values are read at **build time**. Locally they come from `.env`, in production
+from GitHub → Settings → Secrets and variables → Actions → Variables. See
+[.env.example](.env.example) for the full list.
 
-```bash
-docker compose up --build
-```
+Required: `SITE_URL`, `LEGAL_NAME`, `LEGAL_STREET`, `LEGAL_POSTAL_CODE`, `LEGAL_CITY`, `LEGAL_EMAIL`.
+The deployment fails if one of them is missing.
 
-## Release
+## Content
 
-The release path follows the `BGO-new` blueprint and ships through Docker images.
-
-```bash
-./build-and-push.sh v0.1.0
-```
-
-The script supports environment overrides for registry, repository, region, and platforms.
-
-## Environment
-
-Start from:
-
-```bash
-cp .env.example .env
-```
-
-Important values:
-
-- `SITE_URL`
-- `SITE_NAME`
-- `ENABLE_HOMECONTROL_PLUS`
-- `DOCKER_IMAGE`
-- `TRAEFIK_WEBSITE_RULE`
-- `TRAEFIK_DOMAIN`
-- `ACME_EMAIL`
-- `LEGAL_*`
-- `HOSTING_PROVIDER_*`
-
-## Legal pages
-
-The site includes:
-
-- `/impressum`
-- `/datenschutz`
-
-The content is tailored to a Germany-operated informational product site and uses environment variables for the operator and hosting details. Fill those values before going live.
-
-## Feature flags
-
-`HomeControl+` is hidden by default.
-
-Set the following before building a release image if you want it visible:
-
-```bash
-ENABLE_HOMECONTROL_PLUS=true
-```
-
-Because the site is statically generated, this flag and the legal details must be available during the Docker build, not only at container runtime.
+- Products and their page copy: `src/content/apps.ts`
+- FAQ questions: `src/content/faq.ts`
+- Placeholders for screenshots and store badges: `src/components/placeholders.tsx`
 
 ## Planning
 
-See [docs/easy-control-website-plan.md](/Users/sel0001d/Development/private/app_presentation/docs/easy-control-website-plan.md) for the research summary, content strategy, and roadmap.
+See [docs/easy-control-website-plan.md](docs/easy-control-website-plan.md) for the research summary, content strategy, and roadmap.

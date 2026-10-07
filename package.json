@@ -8,7 +8,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "postbuild": "node scripts/prune-unreleased.mjs",
+    "preview": "npx --yes serve out",
     "lint": "eslint ."
   },
   "dependencies": {

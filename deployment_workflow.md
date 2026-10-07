@@ -1,78 +1,62 @@
-# Docker Deployment Workflow
+# Deployment: GitHub Pages
 
-This project uses the same deployment approach as the `BGO-new` blueprint: build a
-standalone Next.js image, publish it to a registry, and deploy it with Docker Compose.
+The site is a static Next.js export (`output: "export"`). Every push to `main`
+runs `.github/workflows/deploy.yml`, which lints, builds and publishes the `out/`
+folder to GitHub Pages.
 
-## Prerequisites
+## One-time setup
 
-- Docker with Buildx
-- AWS CLI access to your ECR registry
-- SSH access to the deployment server
+1. **Pages source**: Settings → Pages → Source: *GitHub Actions*.
+2. **Custom domain**: Settings → Pages → Custom domain must match `public/CNAME`.
+   The DNS record is a `CNAME` pointing to `<owner>.github.io`.
+3. **Enforce HTTPS**: Settings → Pages → tick *Enforce HTTPS* (the certificate is
+   issued automatically once DNS is correct).
+4. **Variables**: Settings → Environments → `github-pages` → *Environment variables*
+   (repository-level variables work as well). The build job is bound to the
+   `github-pages` environment, so it reads both. The site text (Impressum,
+   Datenschutz) and SEO URLs are generated from these values at build time. They
+   are public on the website anyway, so they are variables, not secrets.
 
-## 1. Configure environment files
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `SITE_URL` | yes | Public base URL, e.g. `https://www.example.com` (canonical, sitemap, robots) |
+| `LEGAL_NAME` | yes | Name in Impressum and Datenschutz |
+| `LEGAL_STREET` | yes | Street and number |
+| `LEGAL_POSTAL_CODE` | yes | Postal code |
+| `LEGAL_CITY` | yes | City |
+| `LEGAL_EMAIL` | yes | Contact and support e-mail |
+| `SITE_NAME` | no | Defaults to `vselas Apps` |
+| `ENABLE_EASY_CONTROL` | no | Product switch, defaults to off. Only `true` publishes the product |
+| `ENABLE_HOMECONTROL_PLUS` | no | Product switch, defaults to off. Only `true` publishes the product |
+| `LEGAL_REPRESENTATIVE`, `LEGAL_ADDRESS_EXTRA`, `LEGAL_COUNTRY`, `LEGAL_PHONE`, `LEGAL_VAT_ID`, `LEGAL_REGISTER_NAME`, `LEGAL_REGISTER_NUMBER`, `LEGAL_RESPONSIBLE_FOR_CONTENT`, `PRIVACY_SUPERVISORY_AUTHORITY`, `LEGAL_LAST_UPDATED` | no | Optional Impressum / Datenschutz details |
 
-Create local environment values:
+The workflow fails early with a clear error if a required variable is missing, so
+an Impressum without an address can never be published by accident.
 
-```bash
-cp .env.example .env
-```
+`SITE_URL` must use the same host as `public/CNAME`.
 
-Update at least:
-
-- `SITE_URL`
-- `SITE_NAME`
-- `TRAEFIK_WEBSITE_RULE`
-- `TRAEFIK_DOMAIN`
-- `ACME_EMAIL`
-
-## 2. Local development
-
-```bash
-docker compose -f docker-compose.dev.yml up --build
-```
-
-## 3. Build and publish
-
-```bash
-./build-and-push.sh v0.1.0
-```
-
-Optional overrides:
+## Releasing
 
 ```bash
-REGISTRY=123456789012.dkr.ecr.eu-central-1.amazonaws.com \
-REPOSITORY=my-org/app-presentation \
-REGION=eu-central-1 \
-./build-and-push.sh v0.1.0
+git push origin main
 ```
 
-## 4. Deploy on the server
+Watch the run under *Actions*. Variables are read at build time, so after changing
+one, re-run the workflow (*Actions → Deploy to GitHub Pages → Run workflow*).
 
-Set the environment on the server:
+## Local preview of the exported site
 
 ```bash
-export DOCKER_IMAGE=209694132585.dkr.ecr.eu-west-1.amazonaws.com/dvselas/app-presentation:v0.1.0
-export TRAEFIK_WEBSITE_RULE="Host(\`apps.example.com\`) || Host(\`www.apps.example.com\`)"
-export TRAEFIK_DOMAIN="traefik.apps.example.com"
-export ACME_EMAIL="admin@example.com"
+npm run build     # writes the static site to ./out
+npm run preview   # serves ./out on http://localhost:3000
 ```
 
-Then deploy:
+## What static hosting cannot do
 
-```bash
-docker compose pull
-docker compose up -d
-```
-
-## 5. Verify
-
-```bash
-docker compose ps
-docker compose logs -f app-presentation
-```
-
-## Notes
-
-- `next.config.ts` uses standalone output for leaner runtime containers.
-- `SITE_URL` is used for metadata, sitemap, and robots output.
-- The release files are structured so future app launches stay within the same system.
+- **No custom HTTP headers.** GitHub Pages ignores `headers()` in `next.config.ts`,
+  so `X-Frame-Options`, `X-Content-Type-Options` and `Permissions-Policy` cannot be
+  set. Only the referrer policy is applied, via a `<meta>` tag.
+- **No server-side code at request time.** Everything is rendered once at build time.
+- **Switched-off products.** Files in `public/` are published as-is. The build step
+  `scripts/prune-unreleased.mjs` removes assets of every product whose flag is off.
+  Without any enabled product the site shows a neutral "coming soon" home page.

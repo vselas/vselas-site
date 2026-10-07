@@ -1,17 +1,21 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { siteFaq } from "@/content/faq";
+import { getFaqGroups, getProducts } from "@/content/apps";
 import { getLegalConfig } from "@/lib/legal";
 
-export const metadata: Metadata = {
-  title: "FAQ",
-  description:
-    "Answers to common questions about Easy Control, for guests, hosts, and everyone coming from the App Store.",
-};
+export function generateMetadata(): Metadata {
+  return {
+    title: "FAQ",
+    description: "Answers to common questions about the apps, for everyone coming from the App Store.",
+    robots: { index: getFaqGroups().length > 0 },
+  };
+}
 
 export default function FaqPage() {
   const legalConfig = getLegalConfig();
+  const groups = getFaqGroups();
+  const firstProduct = getProducts()[0];
 
   return (
     <main className="page-main">
@@ -19,38 +23,43 @@ export default function FaqPage() {
         <div className="shell section-heading">
           <div>
             <p className="section-label">FAQ</p>
-            <h1>Questions that come up often.</h1>
+            <h1>
+              {groups.length > 0 ? "Questions that come up often." : "Answers are on the way."}
+            </h1>
           </div>
           <p>
-            Quick answers for guests and hosts. If something is missing, use the
-            support options below and we will help directly.
+            {groups.length > 0
+              ? "Quick answers for everyone using the apps. If something is missing, use the support options below and we will help directly."
+              : "Frequently asked questions will appear here as soon as the first app is available."}
           </p>
         </div>
-        <div className="shell faq-groups">
-          {siteFaq.map((group) => (
-            <div className="faq-group" key={group.title}>
-              <h3>{group.title}</h3>
-              <div className="faq-accordion">
-                {group.items.map((item) => (
-                  <details className="faq-item" key={item.question}>
-                    <summary>
-                      {item.question}
-                      <span aria-hidden="true" className="faq-item__marker" />
-                    </summary>
-                    <p>{item.answer}</p>
-                  </details>
-                ))}
+        {groups.length > 0 ? (
+          <div className="shell faq-groups">
+            {groups.map((group) => (
+              <div className="faq-group" key={group.title}>
+                <h3>{group.title}</h3>
+                <div className="faq-accordion">
+                  {group.items.map((item) => (
+                    <details className="faq-item" key={item.question}>
+                      <summary>
+                        {item.question}
+                        <span aria-hidden="true" className="faq-item__marker" />
+                      </summary>
+                      <p>{item.answer}</p>
+                    </details>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : null}
       </section>
 
       <section className="section section--flush" id="support">
         <div className="shell">
           <div className="support-band">
             <div>
-              <p className="section-label">Still stuck?</p>
+              <p className="section-label">{groups.length > 0 ? "Still stuck?" : "Support"}</p>
               <h2>We help directly.</h2>
               <p>
                 If your question is not covered here, send a short email with what
@@ -63,9 +72,11 @@ export default function FaqPage() {
                   Email support
                 </a>
               ) : null}
-              <Link className="button button--secondary" href="/apps/easy-control">
-                Read the setup guide
-              </Link>
+              {firstProduct ? (
+                <Link className="button button--secondary" href={`/apps/${firstProduct.slug}`}>
+                  Read the setup guide
+                </Link>
+              ) : null}
             </div>
           </div>
         </div>

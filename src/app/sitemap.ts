@@ -1,46 +1,58 @@
 import type { MetadataRoute } from "next";
 
-import { getProducts } from "@/content/apps";
+import { getFaqGroups, getProducts } from "@/content/apps";
 import { absoluteUrl } from "@/lib/site";
 
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const productEntries = getProducts().map((product) => ({
+  const products = getProducts();
+  const lastModified = new Date();
+
+  const productEntries = products.map((product) => ({
     url: absoluteUrl(`/apps/${product.slug}`),
-    lastModified: new Date(),
+    lastModified,
     changeFrequency: "weekly" as const,
     priority: 0.8,
   }));
 
+  const contentEntries: MetadataRoute.Sitemap = [];
+
+  if (products.length > 0) {
+    contentEntries.push({
+      url: absoluteUrl("/apps"),
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    });
+  }
+
+  if (getFaqGroups().length > 0) {
+    contentEntries.push({
+      url: absoluteUrl("/faq"),
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.7,
+    });
+  }
+
   return [
     {
       url: absoluteUrl("/"),
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: "weekly",
       priority: 1,
     },
-    {
-      url: absoluteUrl("/apps"),
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: absoluteUrl("/faq"),
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.7,
-    },
+    ...contentEntries,
     {
       url: absoluteUrl("/impressum"),
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: "monthly",
       priority: 0.3,
     },
     {
       url: absoluteUrl("/datenschutz"),
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: "monthly",
       priority: 0.3,
     },

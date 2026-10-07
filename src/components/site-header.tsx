@@ -1,17 +1,26 @@
 import Link from "next/link";
 import Image from "next/image";
 
-import { getProducts } from "@/content/apps";
+import { getFaqGroups, getProducts } from "@/content/apps";
 import { getSiteConfig } from "@/lib/site";
 
 export function SiteHeader() {
   const products = getProducts();
   const flagship = products[0];
-  const productLinks = products.map((product) => ({
-    href: `/apps/${product.slug}`,
-    label: product.navLabel ?? product.name,
-  }));
   const siteConfig = getSiteConfig();
+  const navItems = [
+    ...(products.length > 0
+      ? [
+          { href: "/apps", label: "Apps" },
+          ...products.map((product) => ({
+            href: `/apps/${product.slug}`,
+            label: product.navLabel ?? product.name,
+          })),
+        ]
+      : []),
+    ...(getFaqGroups().length > 0 ? [{ href: "/faq", label: "FAQ" }] : []),
+    { href: "/#app-store-support", label: "Support" },
+  ];
 
   return (
     <header className="site-header">
@@ -20,21 +29,16 @@ export function SiteHeader() {
           <Image
             alt=""
             className="site-header__logo"
-            height={1024}
+            height={192}
             priority
             src="/brand/vselas-mark-dark.png"
-            width={1024}
+            width={192}
           />
           <span>{siteConfig.name}</span>
         </Link>
         <nav aria-label="Primary">
           <ul className="site-header__nav">
-            {[
-              { href: "/apps", label: "Apps" },
-              ...productLinks,
-              { href: "/faq", label: "FAQ" },
-              { href: "/#app-store-support", label: "Support" },
-            ].map((item) => (
+            {navItems.map((item) => (
               <li key={item.href}>
                 <Link href={item.href}>{item.label}</Link>
               </li>

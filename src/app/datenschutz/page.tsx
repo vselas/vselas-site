@@ -59,15 +59,20 @@ export default function PrivacyPage() {
           </article>
 
           <article className="legal-card">
-            <h2>2. Hosting und Server-Logfiles</h2>
+            <h2>2. Hosting ueber GitHub Pages und Server-Logfiles</h2>
             <p>
-              Beim Aufruf dieser Website verarbeitet der Hosting-Anbieter technisch notwendige
-              Verbindungsdaten, um die Seite auszuliefern und die Sicherheit des Betriebs zu
-              gewaehrleisten.
+              Diese Website wird als statische Website ueber GitHub Pages bereitgestellt. Anbieter
+              ist GitHub Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA, ein
+              Unternehmen der Microsoft Corporation.
+            </p>
+            <p>
+              Beim Aufruf dieser Website verarbeitet GitHub technisch notwendige Verbindungsdaten,
+              um die Seite auszuliefern und die Sicherheit des Betriebs zu gewaehrleisten. Dazu
+              koennen insbesondere gehoeren:
             </p>
             <ul className="legal-list">
               <li>aufgerufene Seite und Zeitpunkt des Zugriffs</li>
-              <li>IP-Adresse, gekuerzt oder vollstaendig je nach Hosting-Konfiguration</li>
+              <li>IP-Adresse</li>
               <li>Browser- und Betriebssysteminformationen</li>
               <li>Referrer-URL und technische Statusinformationen</li>
             </ul>
@@ -75,14 +80,19 @@ export default function PrivacyPage() {
               Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Unser berechtigtes Interesse liegt in
               der stabilen und sicheren Bereitstellung dieser Website.
             </p>
-            {legalConfig.hostingProviderName || legalConfig.hostingProviderLocation ? (
-              <p>
-                Hosting-Dienstleister: {legalConfig.hostingProviderName || "Noch nicht konfiguriert."}
-                {legalConfig.hostingProviderLocation
-                  ? `, Standort: ${legalConfig.hostingProviderLocation}`
-                  : ""}
-              </p>
-            ) : null}
+            <p>
+              Dabei kann eine Uebermittlung personenbezogener Daten in die USA stattfinden. GitHub
+              nimmt nach eigenen Angaben am EU-U.S. Data Privacy Framework teil; fuer
+              zertifizierte Unternehmen besteht ein Angemessenheitsbeschluss der Europaeischen
+              Kommission. Weitere Informationen finden Sie in der{" "}
+              <a
+                href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"
+                rel="noopener noreferrer"
+              >
+                Datenschutzerklaerung von GitHub
+              </a>
+              .
+            </p>
           </article>
 
           <article className="legal-card">

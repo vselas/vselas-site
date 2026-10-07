@@ -17,10 +17,13 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Binds the job to the environment so it can read the environment-level variables.
+    environment: github-pages
     env:
-      # Values come from Settings → Secrets and variables → Actions → Variables
+      # Values come from Settings → Environments → github-pages → Environment variables
       SITE_URL: ${{ vars.SITE_URL }}
       SITE_NAME: ${{ vars.SITE_NAME }}
+      ENABLE_EASY_CONTROL: ${{ vars.ENABLE_EASY_CONTROL }}
       ENABLE_HOMECONTROL_PLUS: ${{ vars.ENABLE_HOMECONTROL_PLUS }}
       LEGAL_NAME: ${{ vars.LEGAL_NAME }}
       LEGAL_REPRESENTATIVE: ${{ vars.LEGAL_REPRESENTATIVE }}
@@ -36,10 +39,22 @@ jobs:
       LEGAL_REGISTER_NUMBER: ${{ vars.LEGAL_REGISTER_NUMBER }}
       LEGAL_RESPONSIBLE_FOR_CONTENT: ${{ vars.LEGAL_RESPONSIBLE_FOR_CONTENT }}
       PRIVACY_SUPERVISORY_AUTHORITY: ${{ vars.PRIVACY_SUPERVISORY_AUTHORITY }}
-      HOSTING_PROVIDER_NAME: ${{ vars.HOSTING_PROVIDER_NAME }}
-      HOSTING_PROVIDER_LOCATION: ${{ vars.HOSTING_PROVIDER_LOCATION }}
       LEGAL_LAST_UPDATED: ${{ vars.LEGAL_LAST_UPDATED }}
     steps:
+      - name: Check required site configuration
+        run: |
+          missing=""
+          for name in SITE_URL LEGAL_NAME LEGAL_STREET LEGAL_POSTAL_CODE LEGAL_CITY LEGAL_EMAIL; do
+            if [ -z "${!name}" ]; then missing="$missing $name"; fi
+          done
+          if [ -n "$missing" ]; then
+            echo "::error::Missing GitHub Actions variables:$missing. Add them under Settings > Secrets and variables > Actions > Variables (see README)."
+            exit 1
+          fi
+          case "$SITE_URL" in
+            https://*) ;;
+            *) echo "::error::SITE_URL must start with https:// (got: $SITE_URL)"; exit 1 ;;
+          esac
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:

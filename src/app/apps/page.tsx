@@ -1,14 +1,19 @@
+import type { Metadata } from "next";
+
 import { AppCard } from "@/components/app-card";
 import { getProducts } from "@/content/apps";
 
-export const metadata = {
-  title: "Apps",
-  description: "Explore the apps and see how they help people use smart homes more easily.",
-};
+export function generateMetadata(): Metadata {
+  return {
+    title: "Apps",
+    description: "Explore the apps and see how they help people use smart homes more easily.",
+    robots: { index: getProducts().length > 0 },
+  };
+}
 
 export default function AppsIndexPage() {
   const products = getProducts();
-  const hasCompanion = products.length > 1;
+  const hasApps = products.length > 0;
 
   return (
     <main className="page-main">
@@ -17,22 +22,24 @@ export default function AppsIndexPage() {
           <div>
             <p className="section-label">Apps</p>
             <h1>
-              {hasCompanion
+              {hasApps
                 ? "Apps that make smart homes easier to use."
-                : "Easy Control and what it helps people do."}
+                : "The first app is coming soon."}
             </h1>
           </div>
           <p>
-            {hasCompanion
-              ? "Choose the app that matches what you want to do at home."
-              : "Start with Easy Control to understand guest access, everyday use, and the devices you can share."}
+            {hasApps
+              ? "Learn what each app does, how to set it up, and where to get help."
+              : "Check back soon, or get in touch if you have questions."}
           </p>
         </div>
-        <div className="shell app-grid">
-          {products.map((product) => (
-            <AppCard key={product.slug} product={product} />
-          ))}
-        </div>
+        {hasApps ? (
+          <div className="shell app-grid">
+            {products.map((product) => (
+              <AppCard key={product.slug} product={product} />
+            ))}
+          </div>
+        ) : null}
       </section>
     </main>
   );

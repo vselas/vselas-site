@@ -30,7 +30,7 @@ export function ProductHero({ product }: { product: Product }) {
             </a>
             {product.companionHowTo ? (
               <a className="button button--secondary" href="#home-assistant-howto">
-                Home Assistant how-to
+                {product.companionHowTo.buttonLabel}
               </a>
             ) : null}
           </div>

@@ -1,4 +1,6 @@
 import type { StoreBadgeKind } from "@/components/placeholders";
+import type { FaqGroup } from "@/content/faq";
+import { easyControlFaq } from "@/content/faq";
 import type { FeatureFlagName } from "@/lib/feature-flags";
 import { getFeatureFlags } from "@/lib/feature-flags";
 
@@ -73,6 +75,7 @@ export type CompanionEntitySupport = {
 };
 
 export type CompanionHowTo = {
+  buttonLabel: string;
   eyebrow: string;
   title: string;
   intro: string;
@@ -80,6 +83,17 @@ export type CompanionHowTo = {
   actions: CompanionAction[];
   supportedEntities: CompanionEntitySupport[];
   screenshotNotes: string[];
+};
+
+export type ProductPageCopy = {
+  homeBenefitsHeading: string;
+  modulesIntro: string;
+  storyHeading: string;
+  securityHeading: string;
+  securityIntro: string;
+  domainsHeading: string;
+  downloadsHeading: string;
+  downloadsIntro: string;
 };
 
 export type Product = {
@@ -106,6 +120,8 @@ export type Product = {
   futureFit: string[];
   companionHowTo?: CompanionHowTo;
   faq: ProductFaq[];
+  faqGroups?: FaqGroup[];
+  copy?: Partial<ProductPageCopy>;
 };
 
 export const products: Product[] = [
@@ -120,6 +136,21 @@ export const products: Product[] = [
     longSummary:
       "Easy Control turns an awkward smart-home handoff into something simple and clear. You create a pass in Home Assistant, share it as a QR code or email link, and guests pair in seconds on iPhone. They only see the devices and actions you approved, sensitive actions can stay protected with Face ID, and live status helps everyone feel confident during the visit.",
     status: "Available now",
+    featureFlag: "easyControl",
+    faqGroups: easyControlFaq,
+    copy: {
+      homeBenefitsHeading: "A better handoff for guests.",
+      modulesIntro:
+        "Easy Control has one part for the person sharing access and one part for the guest. This section shows what each one is for.",
+      storyHeading: "From invite to everyday use.",
+      securityHeading: "Designed to feel simple for guests and reassuring for hosts.",
+      securityIntro:
+        "The important part is not the technical wording. It is the feeling that access stays limited, sensitive actions stay protected, and the host stays in control.",
+      domainsHeading: "Devices and information you can share.",
+      downloadsHeading: "What each person needs during setup and the visit.",
+      downloadsIntro:
+        "One part is for the person sharing access, and one part is for the guest who uses it. This makes it easier to understand what to install and what to open during a visit.",
+    },
     platforms: ["iPhone", "Home Assistant", "Live status"],
     audience: ["Home owners", "Airbnb hosts", "Family access", "Trusted visitors"],
     proofPoints: [
@@ -147,10 +178,10 @@ export const products: Product[] = [
           "Keep access safely stored on the phone while the visit lasts",
         ],
         asset: {
-          src: "/apps/easy-control/app-icon.png",
+          src: "/apps/easy-control/app-icon.webp",
           alt: "HA Easy Control iPhone app icon",
-          width: 1024,
-          height: 1024,
+          width: 512,
+          height: 512,
         },
       },
       {
@@ -300,6 +331,7 @@ export const products: Product[] = [
       "Make the catalogue page work as a growing index rather than a one-off landing page so later apps feel expected, not bolted on.",
     ],
     companionHowTo: {
+      buttonLabel: "Home Assistant how-to",
       eyebrow: "Home Assistant companion",
       title: "How to set up and manage guest access in Home Assistant.",
       intro:
@@ -592,7 +624,7 @@ data:
     shortSummary:
       "A native macOS control center that connects Home Assistant, UniFi Protect cameras, camera streaming, Sonos, and travel context into configurable dashboards and live control surfaces.",
     longSummary:
-      "HomeControl+ is the owner-facing counterpart to Easy Control. It is a native macOS smart-home command center built around MQTT-backed Home Assistant control, configurable dashboards, live camera views, Sonos playback, and travel context. The codebase already supports an eight-step setup wizard, a configurable sidebar, dashboard cycling, and a deep catalogue of widgets, which makes it a strong future flagship for the site even before public release.",
+      "HomeControl+ is a native macOS smart-home command center built around MQTT-backed Home Assistant control, configurable dashboards, live camera views, Sonos playback, and travel context. The codebase already supports an eight-step setup wizard, a configurable sidebar, dashboard cycling, and a deep catalogue of widgets, which makes it a strong future flagship for the site even before public release.",
     status: "In development",
     platforms: ["macOS", "Home Assistant", "MQTT", "UniFi Protect", "Sonos"],
     audience: ["Home owners", "Power users", "Mac-first households", "Wall-display setups"],
@@ -766,20 +798,20 @@ data:
       },
     ],
     futureFit: [
-      "HomeControl+ gives the site a clear owner-facing flagship to pair with Easy Control's guest access story.",
+      "HomeControl+ gives the site a clear owner-facing flagship product.",
       "Its in-development status lets the catalogue support both shipped products and credible public previews without redesign.",
       "Once screenshots are ready, the current page model can absorb floorplans, camera grids, and dashboard walkthroughs with minimal structural change.",
     ],
     faq: [
       {
-        question: "How is HomeControl+ different from Easy Control?",
+        question: "Who is HomeControl+ for?",
         answer:
-          "Easy Control is a tightly scoped guest-access product. HomeControl+ is the resident-facing control center for the people who actually run the home day to day.",
+          "HomeControl+ is the resident-facing control center for the people who actually run the home day to day.",
       },
       {
         question: "Why put HomeControl+ on the site before it is published?",
         answer:
-          "Because it already shapes the product family clearly. It tells visitors there is a bigger macOS control story coming, while Easy Control handles the launch-ready guest-access case.",
+          "Because it already shapes the product family clearly. It tells visitors there is a bigger macOS control story coming.",
       },
       {
         question: "What makes the app interesting enough to preview now?",
@@ -805,4 +837,24 @@ export function getProducts() {
 
 export function getProductBySlug(slug: string) {
   return getProducts().find((product) => product.slug === slug);
+}
+
+export function getFaqGroups() {
+  return getProducts().flatMap((product) => product.faqGroups ?? []);
+}
+
+const defaultProductCopy: ProductPageCopy = {
+  homeBenefitsHeading: "What sets it apart.",
+  modulesIntro: "Here is what belongs to the app and what each part is for.",
+  storyHeading: "From first step to everyday use.",
+  securityHeading: "Built with safety in mind.",
+  securityIntro: "Clear limits, protected sensitive actions, and control that stays with you.",
+  domainsHeading: "Devices and services it connects to.",
+  downloadsHeading: "What you need to get started.",
+  downloadsIntro:
+    "Everything you need to install or open is listed here, so you know what to set up first.",
+};
+
+export function getProductCopy(product: Product): ProductPageCopy {
+  return { ...defaultProductCopy, ...product.copy };
 }
