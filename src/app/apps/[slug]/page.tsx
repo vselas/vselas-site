@@ -104,13 +104,19 @@ export default async function ProductPage({ params }: Props) {
         <div className="shell story-grid">
           {product.story.map((step, index) => (
             <article className="story-card" key={step.title}>
-              <span className="story-card__index">0{index + 1}</span>
-              <div className="story-card__media">
+              <div
+                className={
+                  step.image && step.image.width > step.image.height
+                    ? "story-card__media story-card__media--photo"
+                    : "story-card__media"
+                }
+              >
                 {step.image ? (
                   <Image
                     alt={step.image.alt}
                     className="story-card__shot"
                     height={step.image.height}
+                    sizes="(max-width: 1020px) 92vw, 270px"
                     src={step.image.src}
                     width={step.image.width}
                   />
@@ -118,8 +124,11 @@ export default async function ProductPage({ params }: Props) {
                   <ImagePlaceholder label={step.title} note="Screenshot coming soon" />
                 )}
               </div>
-              <h3>{step.title}</h3>
-              <p>{step.description}</p>
+              <div className="story-card__body">
+                <span className="story-card__index">{index + 1}</span>
+                <h3>{step.title}</h3>
+                <p>{step.description}</p>
+              </div>
             </article>
           ))}
         </div>
@@ -167,14 +176,29 @@ export default async function ProductPage({ params }: Props) {
         </div>
         <div className="shell feature-group-grid">
           {product.featureGroups.map((group) => (
-            <article className="feature-group-card" key={group.title}>
-              <h3>{group.title}</h3>
-              <p>{group.intro}</p>
-              <ul className="detail-list">
-                {group.bullets.map((bullet) => (
-                  <li key={bullet}>{bullet}</li>
-                ))}
-              </ul>
+            <article
+              className={group.photo ? "feature-group-card feature-group-card--photo" : "feature-group-card"}
+              key={group.title}
+            >
+              {group.photo ? (
+                <Image
+                  alt={group.photo.alt}
+                  className="feature-group-card__photo"
+                  height={group.photo.height}
+                  sizes="(max-width: 1020px) 92vw, 460px"
+                  src={group.photo.src}
+                  width={group.photo.width}
+                />
+              ) : null}
+              <div className="feature-group-card__body">
+                <h3>{group.title}</h3>
+                <p>{group.intro}</p>
+                <ul className="detail-list">
+                  {group.bullets.map((bullet) => (
+                    <li key={bullet}>{bullet}</li>
+                  ))}
+                </ul>
+              </div>
             </article>
           ))}
         </div>
@@ -374,7 +398,19 @@ export default async function ProductPage({ params }: Props) {
       {product.supportEmail || product.faqGroups?.length || product.links?.length ? (
         <section className="section section--flush" id="help">
           <div className="shell">
-            <div className="support-band">
+            <div
+              className={product.supportPhoto ? "support-band support-band--photo" : "support-band"}
+            >
+              {product.supportPhoto ? (
+                <Image
+                  alt={product.supportPhoto.alt}
+                  className="support-band__photo"
+                  height={product.supportPhoto.height}
+                  sizes="(max-width: 1020px) 92vw, 420px"
+                  src={product.supportPhoto.src}
+                  width={product.supportPhoto.width}
+                />
+              ) : null}
               <div>
                 <p className="section-label">Help</p>
                 <h2>Need a hand with {product.navLabel ?? product.name}?</h2>
@@ -393,21 +429,21 @@ export default async function ProductPage({ params }: Props) {
                     ))}
                   </ul>
                 ) : null}
-              </div>
-              <div className="support-band__actions">
-                {product.faqGroups?.length ? (
-                  <Link className="button" href="/faq">
-                    Browse the help &amp; FAQ
-                  </Link>
-                ) : null}
-                {product.supportEmail ? (
-                  <a
-                    className={product.faqGroups?.length ? "button button--secondary" : "button"}
-                    href={`mailto:${product.supportEmail}`}
-                  >
-                    Email support
-                  </a>
-                ) : null}
+                <div className="support-band__actions">
+                  {product.faqGroups?.length ? (
+                    <Link className="button" href="/faq">
+                      Browse the help &amp; FAQ
+                    </Link>
+                  ) : null}
+                  {product.supportEmail ? (
+                    <a
+                      className={product.faqGroups?.length ? "button button--secondary" : "button"}
+                      href={`mailto:${product.supportEmail}`}
+                    >
+                      Email support
+                    </a>
+                  ) : null}
+                </div>
               </div>
             </div>
             {product.disclaimer ? <p className="product-disclaimer">{product.disclaimer}</p> : null}

@@ -49,7 +49,8 @@ The deployment fails if one of them is missing.
 - Products and their page copy: `src/content/apps.ts`
 - FAQ questions: `src/content/faq.ts`
 - Placeholders for screenshots and store badges: `src/components/placeholders.tsx`
+- Lifestyle photos (CC0) and their sources: `public/apps/<slug>/photos/`, [docs/image-credits.md](docs/image-credits.md)
 
 ## Planning
 
-See [docs/easy-control-website-plan.md](docs/easy-control-website-plan.md) for the research summary, content strategy, and roadmap.
+See [docs/website-plan.md](docs/website-plan.md) for the research summary, content strategy, and roadmap.

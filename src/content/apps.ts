@@ -40,6 +40,7 @@ export type FeatureGroup = {
   title: string;
   intro: string;
   bullets: string[];
+  photo?: ProductImage;
 };
 
 export type SetupStep = {
@@ -101,6 +102,7 @@ export type CompanionHowTo = {
 
 export type ProductPageCopy = {
   homeBenefitsHeading: string;
+  homeScreensHeading: string;
   modulesIntro: string;
   storyHeading: string;
   securityHeading: string;
@@ -137,6 +139,10 @@ export type Product = {
   faqGroups?: FaqGroup[];
   copy?: Partial<ProductPageCopy>;
   heroImage?: ProductImage;
+  // Lifestyle photo shown behind the hero screenshot (free-licensed, see docs/image-credits.md).
+  heroPhoto?: ProductImage;
+  // Photo shown next to the help and support band.
+  supportPhoto?: ProductImage;
   gallery?: ProductGallery;
   supportEmail?: string;
   links?: ProductLink[];
@@ -149,6 +155,11 @@ const roomToneIcon: ProductImage = {
   width: 512,
   height: 512,
 };
+
+// CC0 photos from StockSnap, see docs/image-credits.md.
+function roomTonePhoto(name: string, alt: string): ProductImage {
+  return { src: `/apps/roomtone/photos/${name}.webp`, alt, width: 960, height: 640 };
+}
 
 export const products: Product[] = [
   {
@@ -174,6 +185,7 @@ export const products: Product[] = [
       "RoomTone is compatible with Sonos, but it is not a Sonos product and is not certified by Sonos. Sonos is a trademark of Sonos, Inc.",
     copy: {
       homeBenefitsHeading: "Their speaker, your rules.",
+      homeScreensHeading: "Big covers. One tap. Nothing else in the way.",
       modulesIntro:
         "RoomTone is one app with two sides: what your child sees, and what only you can change.",
       storyHeading: "From setup to the first song.",
@@ -205,6 +217,14 @@ export const products: Product[] = [
       width: 600,
       height: 1304,
     },
+    heroPhoto: roomTonePhoto(
+      "teepee-room",
+      "A child sits in a play tent in a bright living room, looking at a picture book",
+    ),
+    supportPhoto: roomTonePhoto(
+      "reading-in-bed",
+      "A mother and her daughter read a picture book together in bed",
+    ),
     modules: [
       {
         name: "Child's view",
@@ -238,6 +258,10 @@ export const products: Product[] = [
         title: "Set it up on your child's device",
         description:
           "Open RoomTone, choose a parental PIN, allow access to the local network and pick the speakers your child may control.",
+        image: roomTonePhoto(
+          "tablet-together",
+          "A mother and her daughter look at a tablet together on the sofa",
+        ),
       },
       {
         title: "Decide what your child sees",
@@ -347,6 +371,10 @@ export const products: Product[] = [
       {
         title: "Their room, their music",
         intro: "Your child controls the speaker in their room themselves, and only that one.",
+        photo: roomTonePhoto(
+          "child-tablet",
+          "A smiling girl holds a tablet while her mother sits behind her in a cosy room",
+        ),
         bullets: [
           "Big covers of favorites and playlists, recently played at the top",
           "Play, pause, skip and volume with one tap",
@@ -357,6 +385,10 @@ export const products: Product[] = [
       {
         title: "More music, on your terms",
         intro: "Search beyond your favorites only when you switch it on.",
+        photo: roomTonePhoto(
+          "sofa-tablet",
+          "A girl sits on her mother's lap on the sofa and taps on a tablet",
+        ),
         bullets: [
           "Search Apple Music and Spotify too, if you like",
           "Explicit songs and albums only show if you allow them",
@@ -368,6 +400,10 @@ export const products: Product[] = [
       {
         title: "You stay in charge",
         intro: "You decide what your child can reach, and your PIN keeps it that way.",
+        photo: roomTonePhoto(
+          "tablet-sofa-close",
+          "A mother holds a tablet while her daughter leans against her and watches",
+        ),
         bullets: [
           "You decide which speakers your child may control",
           "The volume limit you set in the Sonos app applies here too",
@@ -378,6 +414,7 @@ export const products: Product[] = [
       {
         title: "Made for bedtime and the wall",
         intro: "Quiet evenings, and a tablet that stays where you put it.",
+        photo: roomTonePhoto("sleeping-child", "A little girl sleeps peacefully on a white pillow"),
         bullets: [
           "Bedtime: only pause, quieter and sleep favorites with a timer",
           "Kiosk mode for a wall tablet, with a night light",
@@ -1199,6 +1236,7 @@ export function getSupportEmail(fallback: string) {
 
 const defaultProductCopy: ProductPageCopy = {
   homeBenefitsHeading: "What sets it apart.",
+  homeScreensHeading: "A closer look at the app.",
   modulesIntro: "Here is what belongs to the app and what each part is for.",
   storyHeading: "From first step to everyday use.",
   securityHeading: "Built with safety in mind.",

@@ -2,12 +2,38 @@
 
 ## Goal
 
-Create a polished Next.js product site that can present multiple apps over time, while giving each product an honest release posture:
+Create a polished Next.js product and help site that can present multiple apps over time, while giving each product an honest release posture. Visitors often arrive from the App Store, so the site must also work as the support and privacy destination for every published app.
 
-- **Easy Control for Home Assistant** as the launch-ready public story
-- **HomeControl+** as the upcoming macOS flagship that is still in development
+Current portfolio:
+
+| Product | Role | Site status |
+| --- | --- | --- |
+| **RoomTone** | iPhone/iPad app for children's rooms, compatible with Sonos | Live on the site (`ENABLE_ROOMTONE`, on by default); App Store release "coming soon" |
+| **Easy Control for Home Assistant** | iPhone app + Home Assistant integration for guest access | Content written, hidden (`ENABLE_EASY_CONTROL=false`) |
+| **HomeControl+** | macOS smart-home control center | Content written, hidden (`ENABLE_HOMECONTROL_PLUS=false`), in development |
 
 ## Portfolio research summary
+
+### RoomTone
+
+RoomTone is a single app with two sides:
+
+1. A **child's view**: big covers of Sonos favorites and playlists, one-tap playback, search by typing or voice (on-device), and audio drama series that continue with the next episode.
+2. **Parental settings** behind a PIN: which speakers the child may control, which favorites and playlists are hidden, bedtime with sleep favorites and a timer, and kiosk mode with a night light for wall tablets.
+
+What the app gives the website:
+
+- a clear family audience and an everyday problem ("my child wants to play music without touching my speakers")
+- a strong privacy story: no account, no server, no ads, no tracking; it talks to speakers over the local Wi-Fi
+- the Sonos volume limit applies, so parents keep control
+- real iPhone and iPad screenshots with invented demo content (`public/apps/roomtone/`)
+- a dedicated support address (`roomtone@vselas.de`) and existing privacy and German help pages on `roomtone.vselas.de`
+
+Why it matters:
+
+- it is the first product published on the site
+- it sets the tone for the portfolio: calm, family-friendly, privacy-first
+- it needs a careful "compatible with Sonos, not a Sonos product" disclaimer
 
 ### Easy Control for Home Assistant
 
@@ -37,7 +63,7 @@ Why it matters:
 - it has a crisp problem statement
 - it contains a full end-to-end user journey
 - it has unusually strong trust and security differentiation
-- it is already the best candidate for the first public launch story
+- it is a strong candidate for the next public product once release links are confirmed
 
 ### HomeControl+
 
@@ -59,8 +85,8 @@ What the repo already proves:
 
 Why it matters:
 
-- it gives the site a second, complementary product story
-- it shifts the portfolio from “one guest-access app” to “guest access plus resident control center”
+- it gives the site a complementary, owner-facing product story
+- it rounds out the portfolio from family audio and guest access to a resident control center
 - it should be shown publicly as **in development**, not as a published app
 
 ## Site strategy
@@ -69,29 +95,34 @@ Why it matters:
 
 The product family becomes clearer when the roles stay distinct:
 
+- **RoomTone**: the child's own speaker, with parental rules
 - **Easy Control**: guest access without shared accounts
 - **HomeControl+**: the owner-facing smart-home cockpit on macOS
 
 That means the site should present:
 
-- one launch-ready product with download-oriented messaging
-- one in-development product with preview-oriented messaging
+- the first enabled product as the flagship on the home page
+- download-oriented messaging for published or soon-published apps
+- preview-oriented messaging for in-development products
 - room for future iOS, macOS, and Home Assistant tools without redesign
+
+Products are switched on one at a time with an `ENABLE_*` flag. A product that is switched off is hidden completely: no pages, navigation, sitemap entries, FAQ, or assets (`scripts/prune-unreleased.mjs` removes them from `out/`). Without any enabled product the home page shows a neutral "coming soon" message.
 
 ### Information architecture
 
-The current structure still works well:
-
 - `/`
   - product-family landing page
-  - launch-ready feature emphasis on Easy Control
-  - clear signal that HomeControl+ is coming next
+  - the first enabled product (currently RoomTone) is the flagship: hero, proof points, benefits
+  - App Store support band with links to the FAQ and support email
 - `/apps`
-  - reusable catalogue for shipped and in-development products
-- `/apps/easy-control`
-  - full public product story
-- `/apps/homecontrol-plus`
-  - preview page with strong capability framing but no public download pressure
+  - reusable catalogue of all enabled products
+- `/apps/[slug]`
+  - full product story: modules, how it works, screenshots, features, security, setup, downloads, optional Home Assistant how-to, FAQ, help
+  - `/apps/roomtone` is live; `/apps/easy-control` and `/apps/homecontrol-plus` are built only when their flags are on
+- `/faq`
+  - help center built from the `faqGroups` of all enabled products
+- `/impressum`, `/datenschutz`
+  - German legal pages, generated from `LEGAL_*` variables
 
 ### Content model rules
 
@@ -107,11 +138,13 @@ Each product entry should support:
 - supported capabilities
 - setup steps
 - download and release states
-- FAQ
+- FAQ, plus optional grouped help-center FAQ (`faqGroups`)
+- optional feature flag, gallery, support email, external links, disclaimer, and page copy overrides
 
-This now clearly fits both products:
+This fits all three products:
 
-- Easy Control uses modules to express app + integration
+- RoomTone uses modules to express the child's view and the parental settings
+- Easy Control uses modules to express app + integration, plus a Home Assistant how-to
 - HomeControl+ uses modules to express app + dashboard/integration system
 
 The model also proves the site must support both:
@@ -179,6 +212,20 @@ Usefulness for this project:
 
 ## Recommended narrative direction
 
+### RoomTone
+
+Lead with the everyday benefit:
+
+> Your child's own speaker.
+
+Then layer in the parental trust story:
+
+- only the speakers you allow
+- the Sonos volume limit applies
+- bedtime mode with sleep favorites and a timer
+- PIN-protected settings
+- no account, no ads, no tracking
+
 ### Easy Control
 
 Lead with the everyday benefit:
@@ -214,13 +261,15 @@ Important release rule:
 
 ## Visual direction
 
-The first implementation should feel intentional and a little more premium than a generic SaaS page:
+The site should feel calm, Apple-native, and a little more premium than a generic SaaS page:
 
-- warm neutral background instead of flat white
-- orange, teal, and lime accents to suggest smart-home energy without drifting into generic blue-purple gradients
-- rounded glass-like panels for product cards
-- large expressive typography with a strong headline rhythm
-- animated hero panels that still respect reduced motion
+- light blue-tinted background with white surfaces and a deep navy hero (tokens in `src/app/globals.css`)
+- a single blue accent with sky-blue highlights
+- rounded cards and panels with soft shadows
+- the system font stack (SF Pro on Apple devices) with a strong headline rhythm
+- real device screenshots where available, clearly marked placeholders where not
+- free-licensed (CC0) lifestyle photos of families and children's rooms, so the site shows the app in a real home; every photo is listed in `docs/image-credits.md`
+- motion that respects `prefers-reduced-motion`
 
 ## Release engineering requirements
 
@@ -236,18 +285,26 @@ See `deployment_workflow.md` for the setup and release steps.
 
 ## Near-term next steps
 
-1. Install dependencies and run `lint` and `build`.
-2. Decide the public brand name and final domain.
-3. Add real release links for Easy Control once App Store and HACS/GitHub targets are confirmed.
-4. Gather screenshots or renders for both products, especially HomeControl+ dashboards and camera views.
-5. Keep HomeControl+ framed as an upcoming app until a beta or release plan exists.
-6. Add legal pages when the final company or personal publisher information is ready.
+Done:
+
+- brand name (`vselas Apps`) and domain (`www.vselas.de`)
+- static export and GitHub Pages deployment
+- German legal pages (Impressum, Datenschutz)
+- RoomTone product page, screenshots, and help center
+
+Next:
+
+1. Replace the RoomTone App Store placeholder badge with the real App Store link once the app is published, and change its status from "Coming soon".
+2. Add real release links for Easy Control once App Store and HACS/GitHub targets are confirmed, then enable `ENABLE_EASY_CONTROL`.
+3. Gather screenshots for Easy Control and HomeControl+, especially HomeControl+ dashboards and camera views.
+4. Keep HomeControl+ framed as an upcoming app until a beta or release plan exists.
 
 ## Future product rules
 
 To keep the site coherent as more apps arrive:
 
 - every product gets a catalogue card and a detail page
+- every product has its own `ENABLE_*` flag, mirrored in `src/lib/feature-flags.ts`, `scripts/prune-unreleased.mjs`, `.env.example`, and the deploy workflow
 - every product uses the same structured content data
 - multi-part products can attach multiple modules under one slug
 - release infrastructure remains shared across the entire site
