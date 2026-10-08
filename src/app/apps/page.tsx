@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 
 import { AppCard } from "@/components/app-card";
-import { getProducts } from "@/content/apps";
+import { getProducts, hasNonSmartHomeProducts } from "@/content/apps";
 
 export function generateMetadata(): Metadata {
   return {
     title: "Apps",
-    description: "Explore the apps and see how they help people use smart homes more easily.",
+    description: hasNonSmartHomeProducts()
+      ? "Explore the apps: what each one does, how to set it up, and where to get help."
+      : "Explore the apps and see how they help people use smart homes more easily.",
     robots: { index: getProducts().length > 0 },
   };
 }
@@ -23,7 +25,9 @@ export default function AppsIndexPage() {
             <p className="section-label">Apps</p>
             <h1>
               {hasApps
-                ? "Apps that make smart homes easier to use."
+                ? hasNonSmartHomeProducts()
+                  ? "Apps for your home and your everyday life."
+                  : "Apps that make smart homes easier to use."
                 : "The first app is coming soon."}
             </h1>
           </div>

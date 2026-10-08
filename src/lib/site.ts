@@ -1,17 +1,19 @@
 const fallbackUrl = "https://example.com";
 
-const description =
-  "Apple-native apps that make smart homes simpler, clearer, and safer to use.";
+import { hasNonSmartHomeProducts } from "@/content/apps";
+import { getBrandIntro } from "@/content/brand";
 
 function readValue(name: string) {
   return process.env[name]?.trim() ?? "";
 }
 
 export function getSiteConfig() {
+  const broad = hasNonSmartHomeProducts();
+
   return {
     name: readValue("SITE_NAME") || "vselas Apps",
-    title: "Apps for easier smart homes",
-    description,
+    title: broad ? "Apple apps for home and everyday life" : "Apps for easier smart homes",
+    description: getBrandIntro(broad),
     url: readValue("SITE_URL") || fallbackUrl,
     links: {
       github: "https://github.com/dvselas",

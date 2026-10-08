@@ -158,3 +158,46 @@ export const roomToneFaq: FaqGroup[] = [
     ],
   },
 ];
+
+export const orcaMailFaq: FaqGroup[] = [
+  {
+    title: "OrcaMail: getting started",
+    items: [
+      {
+        question: "Which mail servers does OrcaMail work with?",
+        answer:
+          "OrcaMail works with servers that speak JMAP. It is developed and tested against Stalwart. Classic IMAP-only services such as Gmail or iCloud Mail are not supported.",
+      },
+      {
+        question: "How do I sign in?",
+        answer:
+          "Enter your server address and sign in with an app password, or with your provider's login if the server supports OAuth. You can add several accounts.",
+      },
+      {
+        question: "Why do I not get notifications while the app is closed?",
+        answer:
+          "Instant notifications need a push relay next to your server. Without one, OrcaMail still updates as soon as you open it, and on the Mac while it is running.",
+      },
+    ],
+  },
+  {
+    title: "OrcaMail: everyday use",
+    items: [
+      {
+        question: "Can I use OrcaMail offline?",
+        answer:
+          "Yes. Read, search, flag, file and write without a connection. Your changes are saved on the device and sent in order once you are back online.",
+      },
+      {
+        question: "Why are images in some messages missing?",
+        answer:
+          "Remote images are blocked by default because they can be used to track when you open a message. Tap Load Remote Images to show them once, or trust the sender to always show them.",
+      },
+      {
+        question: "Can I take back a message I just sent?",
+        answer:
+          "Yes. With Undo Send, a message waits for a few seconds before it goes out. Choose how long in Settings.",
+      },
+    ],
+  },
+];

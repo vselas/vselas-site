@@ -16,6 +16,7 @@ const products = [
   { flag: "ENABLE_ROOMTONE", fallback: true, paths: ["out/apps/roomtone"] },
   { flag: "ENABLE_EASY_CONTROL", fallback: false, paths: ["out/apps/easy-control"] },
   { flag: "ENABLE_HOMECONTROL_PLUS", fallback: false, paths: ["out/apps/homecontrol-plus"] },
+  { flag: "ENABLE_ORCAMAIL", fallback: false, paths: ["out/apps/orcamail"] },
 ];
 
 for (const { flag, fallback, paths } of products) {

@@ -1,4 +1,4 @@
-export type FeatureFlagName = "easyControl" | "homeControlPlus" | "roomTone";
+export type FeatureFlagName = "easyControl" | "homeControlPlus" | "orcaMail" | "roomTone";
 
 function readValue(name: string) {
   return process.env[name]?.trim() ?? "";
@@ -14,6 +14,7 @@ export function getFeatureFlags() {
   return {
     easyControl: readFlag("ENABLE_EASY_CONTROL", false),
     homeControlPlus: readFlag("ENABLE_HOMECONTROL_PLUS", false),
+    orcaMail: readFlag("ENABLE_ORCAMAIL", false),
     roomTone: readFlag("ENABLE_ROOMTONE", true),
   } as const;
 }

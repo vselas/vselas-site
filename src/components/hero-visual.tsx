@@ -4,10 +4,12 @@ import { PhoneScreen } from "@/components/phone-screen";
 import type { Product } from "@/content/apps";
 
 // Lifestyle photo with the app screenshot in front of it. Without a photo only
-// the phone is shown.
+// the phone is shown; without a screenshot only the photo, never a placeholder
+// phone on top of a real photo.
 export function HeroVisual({ product, label }: { product: Product; label: string }) {
   const photo = product.heroPhoto;
   const icon = product.modules[0].asset;
+  const showPhone = !photo || Boolean(product.heroImage);
 
   return (
     <div className={photo ? "hero-visual" : "hero-visual hero-visual--phone-only"}>
@@ -22,9 +24,11 @@ export function HeroVisual({ product, label }: { product: Product; label: string
           width={photo.width}
         />
       ) : null}
-      <div className="hero-visual__phone">
-        <PhoneScreen label={label} product={product} />
-      </div>
+      {showPhone ? (
+        <div className="hero-visual__phone">
+          <PhoneScreen label={label} product={product} />
+        </div>
+      ) : null}
       <Image
         alt=""
         aria-hidden="true"

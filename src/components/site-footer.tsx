@@ -24,9 +24,7 @@ export function SiteFooter() {
             />
             <span>{siteConfig.name}</span>
           </div>
-          <p className="site-footer__title">
-            Apple-native apps that make smart homes simpler, clearer, and safer to use.
-          </p>
+          <p className="site-footer__title">{siteConfig.description}</p>
         </div>
         <div className="site-footer__links">
           {products.length > 0 ? <Link href="/apps">All apps</Link> : null}

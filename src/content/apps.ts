@@ -1,6 +1,6 @@
 import type { StoreBadgeKind } from "@/components/placeholders";
 import type { FaqGroup } from "@/content/faq";
-import { easyControlFaq, roomToneFaq } from "@/content/faq";
+import { easyControlFaq, orcaMailFaq, roomToneFaq } from "@/content/faq";
 import type { FeatureFlagName } from "@/lib/feature-flags";
 import { getFeatureFlags } from "@/lib/feature-flags";
 
@@ -100,6 +100,16 @@ export type CompanionHowTo = {
   screenshotNotes: string[];
 };
 
+// A band on the home page that promotes a product next to the flagship, e.g. one
+// that steps outside the smart-home focus. Shown only while the product is enabled.
+export type ProductSpotlight = {
+  eyebrow: string;
+  heading: string;
+  intro: string;
+  highlights: { title: string; detail: string }[];
+  photo: ProductImage;
+};
+
 export type ProductPageCopy = {
   homeBenefitsHeading: string;
   homeScreensHeading: string;
@@ -143,6 +153,9 @@ export type Product = {
   heroPhoto?: ProductImage;
   // Photo shown next to the help and support band.
   supportPhoto?: ProductImage;
+  // false for products outside the smart-home focus; the brand copy adapts to it.
+  smartHome?: boolean;
+  spotlight?: ProductSpotlight;
   gallery?: ProductGallery;
   supportEmail?: string;
   links?: ProductLink[];
@@ -156,7 +169,18 @@ const roomToneIcon: ProductImage = {
   height: 512,
 };
 
+const orcaMailIcon: ProductImage = {
+  src: "/apps/orcamail/app-icon.webp",
+  alt: "OrcaMail app icon",
+  width: 512,
+  height: 512,
+};
+
 // CC0 photos from StockSnap, see docs/image-credits.md.
+function orcaMailPhoto(name: string, alt: string): ProductImage {
+  return { src: `/apps/orcamail/photos/${name}.webp`, alt, width: 960, height: 640 };
+}
+
 function roomTonePhoto(name: string, alt: string): ProductImage {
   return { src: `/apps/roomtone/photos/${name}.webp`, alt, width: 960, height: 640 };
 }
@@ -1002,6 +1026,268 @@ data:
     ],
   },
   {
+    slug: "orcamail",
+    name: "OrcaMail",
+    navLabel: "OrcaMail",
+    category: "Mail, calendar & contacts",
+    featureFlag: "orcaMail",
+    faqGroups: orcaMailFaq,
+    smartHome: false,
+    spotlight: {
+      eyebrow: "New: OrcaMail",
+      heading: "Mail, calendar and contacts. Finally in one native app.",
+      intro:
+        "OrcaMail is our app for everything that lands in your inbox. Built for iPhone, iPad and Mac, for your own JMAP server, and fully usable offline.",
+      highlights: [
+        {
+          title: "Everything in one place",
+          detail: "A unified inbox, your calendar and your contacts, side by side.",
+        },
+        {
+          title: "Fast and offline",
+          detail: "Opens instantly, searches on the device and keeps every change safe.",
+        },
+        {
+          title: "Private by default",
+          detail: "No ads, no trackers, and remote images only when you allow them.",
+        },
+      ],
+      photo: orcaMailPhoto(
+        "desk-by-window",
+        "A tidy white desk by a bright window, with a laptop, a desk lamp and a small globe",
+      ),
+    },
+    tagline: "Your mail, calendar and contacts. One native app.",
+    shortSummary:
+      "A native mail, calendar and contacts app for iPhone, iPad and Mac, built for your own JMAP server. Fast, private and fully usable offline.",
+    longSummary:
+      "OrcaMail brings mail, calendar and contacts together in one native app for iPhone, iPad and Mac. It speaks JMAP, the modern open standard for mail, and works with your own server, such as Stalwart. Everything is stored on your device, so it opens instantly, searches offline and keeps every change safe until you are back online. No ads, no trackers, and remote images stay blocked until you allow them.",
+    status: "In development",
+    platforms: ["iPhone", "iPad", "Mac", "JMAP"],
+    audience: ["Self-hosters", "Privacy-minded people", "Families with their own server", "Small teams"],
+    proofPoints: [
+      { label: "In one app", value: "Mail, calendar, contacts" },
+      { label: "Works", value: "Fully offline" },
+      { label: "Privacy", value: "No ads, no trackers" },
+      { label: "Server", value: "Your own, via JMAP" },
+    ],
+    heroHighlights: [
+      "Mail, calendar and contacts in one app",
+      "Unified inbox across all your accounts",
+      "Read, search and triage offline",
+      "Remote images blocked by default",
+    ],
+    heroPhoto: orcaMailPhoto(
+      "desk-by-window",
+      "A tidy white desk by a bright window, with a laptop, a desk lamp and a small globe",
+    ),
+    supportPhoto: orcaMailPhoto(
+      "laptop-and-notes",
+      "A laptop on a desk next to a pen and handwritten notes",
+    ),
+    modules: [
+      {
+        name: "Mail",
+        role: "Inbox, conversations, compose",
+        summary:
+          "A fast, familiar mail app in the spirit of Apple Mail, with the extras you reach for every day.",
+        bullets: [
+          "Unified inbox, threaded conversations and smart lists like Unread, Flagged and Follow Up",
+          "Swipe actions with undo, multi-select, snooze, mute and VIPs",
+          "Rich text compose with signatures per address, Send Later and Undo Send",
+          "One-tap unsubscribe and highlights for flights and tracking numbers",
+        ],
+        asset: orcaMailIcon,
+      },
+      {
+        name: "Calendar & contacts",
+        role: "Plan, invite, keep in touch",
+        summary:
+          "Your calendar and address book live next to your mail and sync over the same account.",
+        bullets: [
+          "Year, month, week, day and agenda views, with repeating events and alerts",
+          "Send invitations and answer them, so organizers get a real reply",
+          "Contacts with photos and groups, vCard import and export, and duplicate merge",
+          "Optionally show your Apple Calendar and Contacts next to your server data",
+        ],
+        asset: orcaMailIcon,
+      },
+    ],
+    story: [
+      {
+        title: "Sign in to your server",
+        description:
+          "Enter your server address and sign in with an app password or your provider's login. Add as many accounts as you like.",
+        image: orcaMailPhoto(
+          "laptop-and-notes",
+          "A laptop on a desk next to a pen and handwritten notes",
+        ),
+      },
+      {
+        title: "Everything comes to your device",
+        description:
+          "OrcaMail downloads your mailboxes, calendars and contacts once and then only fetches what changed.",
+        image: orcaMailPhoto(
+          "plant-and-laptop",
+          "A laptop on a white desk next to a potted plant, glasses and a phone",
+        ),
+      },
+      {
+        title: "Work through your day",
+        description:
+          "Read, reply, file and flag, also on a train without signal. Every change is kept and sent as soon as you are back online.",
+        image: orcaMailPhoto("iphone-in-hand", "A hand holding an iPhone"),
+      },
+      {
+        title: "Stay on top of your plans",
+        description:
+          "Accept an invite right from the message, and see upcoming events and recent mail on every contact card.",
+        image: orcaMailPhoto("paper-calendar", "An open paper calendar lying on a wooden desk"),
+      },
+    ],
+    featureGroups: [
+      {
+        title: "Fast, even with a huge mailbox",
+        intro: "OrcaMail keeps your mail on your device, so it never makes you wait.",
+        bullets: [
+          "Opens instantly and scrolls smoothly through tens of thousands of messages",
+          "Search runs on your device first and is merged with server results",
+          "Bodies and attachments load ahead of time for the messages you are looking at",
+        ],
+        photo: orcaMailPhoto("typing-on-laptop", "Hands typing on a laptop on a wooden desk"),
+      },
+      {
+        title: "Works offline, loses nothing",
+        intro: "Once you see a change on screen, it is safe.",
+        bullets: [
+          "Read, search, flag, file and write without a connection",
+          "Changes are saved on the device and sent in order when you are back online",
+          "Drafts and queued messages survive a restart",
+        ],
+        photo: orcaMailPhoto(
+          "phone-on-the-go",
+          "Someone on the move reads on a phone, a backpack on their lap",
+        ),
+      },
+      {
+        title: "Private by default",
+        intro: "No ads, no trackers, and nothing you did not ask for.",
+        bullets: [
+          "Remote images are blocked until you allow them for a message or sender",
+          "No analytics, and no read receipts sent behind your back",
+          "Optional app lock with Face ID or Touch ID",
+          "Push notifications can be end-to-end encrypted through your own relay",
+        ],
+        photo: orcaMailPhoto(
+          "plant-and-laptop",
+          "A laptop on a white desk next to a potted plant, glasses and a phone",
+        ),
+      },
+      {
+        title: "Made for iPhone, iPad and Mac",
+        intro: "One app that feels at home on every device.",
+        bullets: [
+          "Three columns on Mac and iPad, a focused layout on iPhone",
+          "Separate windows, menus and keyboard shortcuts on the Mac",
+          "Dark Mode, Dynamic Type, VoiceOver and Reduce Motion",
+          "In English and German",
+        ],
+        photo: orcaMailPhoto(
+          "mac-desk",
+          "A clean desk with a desktop computer, keyboard and mouse",
+        ),
+      },
+    ],
+    supportedDomains: [
+      "A mail server that speaks JMAP, such as Stalwart",
+      "Mail (RFC 8621), contacts (RFC 9610) and calendars over JMAP",
+      "Sign-in with an app password, a token or OAuth",
+      "Several accounts at once, with a unified inbox",
+      "Optional: your Apple Calendar and Contacts on the device",
+      "Optional: push notifications through a self-hosted relay",
+    ],
+    securityHighlights: [
+      "Passwords and tokens are stored only in the Keychain",
+      "Messages are shown with scripts off and remote content blocked",
+      "No analytics or third-party tracking code",
+      "Optional app lock with Face ID, Touch ID or your passcode",
+      "Push payloads can be end-to-end encrypted (RFC 8291)",
+      "Mail, calendar and contacts stay on your server, not in someone else's cloud",
+    ],
+    setup: [
+      {
+        title: "Check your server",
+        detail:
+          "OrcaMail needs a mail server with JMAP, for example Stalwart. Your provider or admin can tell you if yours supports it.",
+      },
+      {
+        title: "Add your account",
+        detail:
+          "Enter the server address and sign in with an app password or your provider's login.",
+      },
+      {
+        title: "Turn on notifications",
+        detail:
+          "For instant alerts while the app is closed, connect a push relay next to your server. Encryption can be switched on in Settings.",
+      },
+      {
+        title: "Make it yours",
+        detail:
+          "Pick your swipe actions, signatures, Undo Send delay and app lock, and add your Apple Calendar if you like.",
+      },
+    ],
+    downloads: [
+      {
+        label: "iPhone, iPad and Mac",
+        description:
+          "OrcaMail is in active development. A public beta and the App Store release will be announced here.",
+        status: "In development",
+      },
+      {
+        label: "Your mail server",
+        description:
+          "Use any server that speaks JMAP. Stalwart is the reference server OrcaMail is tested against.",
+        status: "Bring your own",
+      },
+    ],
+    futureFit: [],
+    faq: [
+      {
+        question: "What is JMAP?",
+        answer:
+          "JMAP is a modern, open standard for mail, calendars and contacts. It is faster and simpler than IMAP, and it syncs changes efficiently, which makes a good offline app possible.",
+      },
+      {
+        question: "Does OrcaMail work with Gmail or iCloud Mail?",
+        answer:
+          "Not today. OrcaMail needs a server that speaks JMAP, such as Stalwart or another JMAP provider.",
+      },
+      {
+        question: "Can I use it without a connection?",
+        answer:
+          "Yes. You can read, search, file and write offline. Your changes are kept on the device and sent when you are back online.",
+      },
+      {
+        question: "Does OrcaMail collect my data?",
+        answer:
+          "No. There are no ads, no analytics and no trackers. Your mail stays between your device and your own server.",
+      },
+    ],
+    copy: {
+      homeBenefitsHeading: "Your mail, on your terms.",
+      homeScreensHeading: "A closer look at OrcaMail.",
+      modulesIntro: "One app with everything you need: mail, calendar and contacts, side by side.",
+      storyHeading: "From sign-in to inbox zero.",
+      securityHeading: "Private by design.",
+      securityIntro:
+        "Your mail stays between your devices and your own server. No ads, no trackers, and remote content only when you allow it.",
+      domainsHeading: "What OrcaMail works with.",
+      downloadsHeading: "Get OrcaMail.",
+      downloadsIntro:
+        "OrcaMail is still in development. Here is what you will need once it is available.",
+    },
+  },
+  {
     slug: "homecontrol-plus",
     name: "HomeControl+",
     navLabel: "HomeControl+",
@@ -1224,6 +1510,15 @@ export function getProducts() {
 
 export function getProductBySlug(slug: string) {
   return getProducts().find((product) => product.slug === slug);
+}
+
+// Products that do not belong to the smart-home focus, enabled right now.
+export function getSpotlightProducts() {
+  return getProducts().filter((product) => product.spotlight);
+}
+
+export function hasNonSmartHomeProducts() {
+  return getProducts().some((product) => product.smartHome === false);
 }
 
 export function getFaqGroups() {

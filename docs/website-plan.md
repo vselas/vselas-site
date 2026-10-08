@@ -11,6 +11,7 @@ Current portfolio:
 | **RoomTone** | iPhone/iPad app for children's rooms, compatible with Sonos | Live on the site (`ENABLE_ROOMTONE`, on by default); App Store release "coming soon" |
 | **Easy Control for Home Assistant** | iPhone app + Home Assistant integration for guest access | Content written, hidden (`ENABLE_EASY_CONTROL=false`) |
 | **HomeControl+** | macOS smart-home control center | Content written, hidden (`ENABLE_HOMECONTROL_PLUS=false`), in development |
+| **OrcaMail** | Mail, calendar and contacts for iPhone, iPad and Mac over JMAP | Content written, hidden (`ENABLE_ORCAMAIL=false`), in development |
 
 ## Portfolio research summary
 

@@ -3,10 +3,26 @@ import Image from "next/image";
 
 import { AppCard } from "@/components/app-card";
 import { HeroVisual } from "@/components/hero-visual";
+import { PortfolioVisual } from "@/components/portfolio-visual";
+import { ProductSpotlightBand } from "@/components/product-spotlight";
 import { StoreBadgePlaceholder } from "@/components/placeholders";
 import type { Product } from "@/content/apps";
-import { getFaqGroups, getProductCopy, getProducts, getSupportEmail } from "@/content/apps";
-import { brandFacts, brandHeroPhoto, brandIntro, brandPrinciples } from "@/content/brand";
+import {
+  getFaqGroups,
+  getProductCopy,
+  getProducts,
+  getSpotlightProducts,
+  getSupportEmail,
+  hasNonSmartHomeProducts,
+} from "@/content/apps";
+import {
+  brandFacts,
+  brandHeroPhoto,
+  brandIntro,
+  brandPrinciples,
+  getBrandFacts,
+  getBrandIntro,
+} from "@/content/brand";
 import { getLegalConfig } from "@/lib/legal";
 
 function SupportBand({ hasApps, product }: { hasApps: boolean; product?: Product }) {
@@ -57,6 +73,41 @@ function SupportBand({ hasApps, product }: { hasApps: boolean; product?: Product
           </div>
           {photo ? null : actions}
         </div>
+      </div>
+    </section>
+  );
+}
+
+function PrinciplesSection() {
+  return (
+    <section className="section" id="principles">
+      <div className="shell section-heading">
+        <div>
+          <p className="section-label">What we build</p>
+          <h2>Apps for the home, made with care.</h2>
+        </div>
+        <p>
+          Every app here starts with an everyday moment at home and keeps it simple:
+          easy to understand, respectful of your privacy, and with you in control.
+        </p>
+      </div>
+      <div className="shell moment-grid">
+        {brandPrinciples.map((principle) => (
+          <article className="moment-card" key={principle.title}>
+            <Image
+              alt={principle.photo.alt}
+              className="moment-card__photo"
+              height={principle.photo.height}
+              sizes="(max-width: 1020px) 92vw, 370px"
+              src={principle.photo.src}
+              width={principle.photo.width}
+            />
+            <div className="moment-card__body">
+              <h3>{principle.title}</h3>
+              <p>{principle.description}</p>
+            </div>
+          </article>
+        ))}
       </div>
     </section>
   );
@@ -121,36 +172,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="section" id="principles">
-          <div className="shell section-heading">
-            <div>
-              <p className="section-label">What we build</p>
-              <h2>Apps for the home, made with care.</h2>
-            </div>
-            <p>
-              Every app here starts with an everyday moment at home and keeps it simple:
-              easy to understand, respectful of your privacy, and with you in control.
-            </p>
-          </div>
-          <div className="shell moment-grid">
-            {brandPrinciples.map((principle) => (
-              <article className="moment-card" key={principle.title}>
-                <Image
-                  alt={principle.photo.alt}
-                  className="moment-card__photo"
-                  height={principle.photo.height}
-                  sizes="(max-width: 1020px) 92vw, 370px"
-                  src={principle.photo.src}
-                  width={principle.photo.width}
-                />
-                <div className="moment-card__body">
-                  <h3>{principle.title}</h3>
-                  <p>{principle.description}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
+        <PrinciplesSection />
 
         <SupportBand hasApps={false} />
       </main>
@@ -168,6 +190,44 @@ export default function HomePage() {
       ? [...photoGroups.slice(0, 2), photoGroups[photoGroups.length - 1]]
       : photoGroups;
   const screens = flagship.gallery?.images.slice(0, 4) ?? [];
+  // Products that step outside the smart-home focus get their own band and a
+  // hero announcement, unless they already are the flagship.
+  const spotlights = getSpotlightProducts().filter((product) => product !== flagship);
+  const broad = hasNonSmartHomeProducts();
+  // With several apps the hero speaks for all of them, not for the flagship.
+  const isPortfolio = products.length > 1;
+
+  const flagshipMoments = (
+    <section className="section">
+      <div className="shell section-heading">
+        <div>
+          <p className="section-label">How {flagshipLabel} helps</p>
+          <h2>{copy.homeBenefitsHeading}</h2>
+        </div>
+        <p>{flagship.shortSummary}</p>
+      </div>
+      <div className="shell moment-grid">
+        {(moments.length > 0 ? moments : flagship.featureGroups.slice(0, 3)).map((group) => (
+          <article className="moment-card" key={group.title}>
+            {group.photo ? (
+              <Image
+                alt={group.photo.alt}
+                className="moment-card__photo"
+                height={group.photo.height}
+                sizes="(max-width: 1020px) 92vw, 370px"
+                src={group.photo.src}
+                width={group.photo.width}
+              />
+            ) : null}
+            <div className="moment-card__body">
+              <h3>{group.title}</h3>
+              <p>{group.intro}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
 
   return (
     <main>
@@ -175,20 +235,45 @@ export default function HomePage() {
         <div className="home-hero__glow" aria-hidden="true" />
         <div className="shell home-hero__inner">
           <div className="home-hero__copy">
-            <p className="hero-eyebrow">Apps by Deno von Selasinsky</p>
-            <h1>
-              Smart homes that feel <span className="text-gradient">welcoming</span>.
-            </h1>
-            <p className="hero-copy">{brandIntro}</p>
-            <div className="button-row">
-              <Link className="button" href={`/apps/${flagship.slug}`}>
-                Explore {flagshipLabel}
+            {spotlights.length > 0 ? (
+              <Link className="hero-announcement" href={`#spotlight-${spotlights[0].slug}`}>
+                <span className="hero-announcement__tag">New</span>
+                {spotlights[0].navLabel ?? spotlights[0].name}:{" "}
+                {spotlights[0].tagline}
+                <span aria-hidden="true" className="hero-announcement__arrow">
+                  →
+                </span>
               </Link>
+            ) : (
+              <p className="hero-eyebrow">Apps by Deno von Selasinsky</p>
+            )}
+            <h1>
+              {broad ? (
+                <>
+                  Apps that feel <span className="text-gradient">at home</span>.
+                </>
+              ) : (
+                <>
+                  Smart homes that feel <span className="text-gradient">welcoming</span>.
+                </>
+              )}
+            </h1>
+            <p className="hero-copy">{getBrandIntro(broad)}</p>
+            <div className="button-row">
+              {isPortfolio ? (
+                <Link className="button" href="/apps">
+                  Explore the apps
+                </Link>
+              ) : (
+                <Link className="button" href={`/apps/${flagship.slug}`}>
+                  Explore {flagshipLabel}
+                </Link>
+              )}
               <Link className="button button--secondary" href="#app-store-support">
                 App Store support
               </Link>
             </div>
-            {storeBadges.length > 0 ? (
+            {!isPortfolio && storeBadges.length > 0 ? (
               <div className="store-badge-row">
                 {storeBadges.map((download) =>
                   download.badge ? (
@@ -198,14 +283,21 @@ export default function HomePage() {
               </div>
             ) : null}
           </div>
-          <HeroVisual label={`${flagshipLabel} home view`} product={flagship} />
+          {isPortfolio ? (
+            <PortfolioVisual products={products} />
+          ) : (
+            <HeroVisual label={`${flagshipLabel} home view`} product={flagship} />
+          )}
         </div>
       </section>
 
-      <section className="stat-band" aria-label={`${flagship.name} at a glance`}>
+      <section
+        className="stat-band"
+        aria-label={isPortfolio ? "At a glance" : `${flagship.name} at a glance`}
+      >
         <div className="shell">
           <div className="stat-band__inner">
-            {flagship.proofPoints.map((point) => (
+            {(isPortfolio ? getBrandFacts(broad) : flagship.proofPoints).map((point) => (
               <div className="stat-band__item" key={point.label}>
                 <span>{point.label}</span>
                 <strong>{point.value}</strong>
@@ -215,35 +307,19 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section">
-        <div className="shell section-heading">
-          <div>
-            <p className="section-label">How {flagshipLabel} helps</p>
-            <h2>{copy.homeBenefitsHeading}</h2>
-          </div>
-          <p>{flagship.shortSummary}</p>
-        </div>
-        <div className="shell moment-grid">
-          {(moments.length > 0 ? moments : flagship.featureGroups.slice(0, 3)).map((group) => (
-            <article className="moment-card" key={group.title}>
-              {group.photo ? (
-                <Image
-                  alt={group.photo.alt}
-                  className="moment-card__photo"
-                  height={group.photo.height}
-                  sizes="(max-width: 1020px) 92vw, 370px"
-                  src={group.photo.src}
-                  width={group.photo.width}
-                />
-              ) : null}
-              <div className="moment-card__body">
-                <h3>{group.title}</h3>
-                <p>{group.intro}</p>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
+      {isPortfolio ? <PrinciplesSection /> : flagshipMoments}
+
+      {spotlights.map((product) =>
+        product.spotlight ? (
+          <ProductSpotlightBand
+            key={product.slug}
+            product={product}
+            spotlight={product.spotlight}
+          />
+        ) : null,
+      )}
+
+      {isPortfolio ? flagshipMoments : null}
 
       {screens.length > 0 ? (
         <section className="section screen-band">
@@ -294,7 +370,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <SupportBand hasApps product={flagship} />
+      <SupportBand hasApps product={isPortfolio ? undefined : flagship} />
     </main>
   );
 }

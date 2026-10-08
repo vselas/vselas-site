@@ -35,3 +35,19 @@ switched on. They live in `public/brand/` so the build never prunes them.
 | `public/brand/photos/bright-living-room.webp` | [Home House](https://stocksnap.io/photo/home-house-87ONRC5PWV) | Breather |
 | `public/brand/photos/lounge-corner.webp` | [Living Room](https://stocksnap.io/photo/living-room-BI0P6D3WL9) | Dan Gold |
 | `public/brand/photos/warm-living-room.webp` | [Room Interior](https://stocksnap.io/photo/room-interior-WKMVXACB6C) | Travel Adventures |
+
+## OrcaMail photos
+
+The app icon is taken from the OrcaMail project. The photos are CC0 from
+StockSnap. They are pruned from the build while `ENABLE_ORCAMAIL` is off.
+
+| File | Source | Photographer |
+| --- | --- | --- |
+| `public/apps/orcamail/photos/desk-by-window.webp` | [Home Office](https://stocksnap.io/photo/home-office-D3OTBIDS9X) | Kristin Hardwick |
+| `public/apps/orcamail/photos/laptop-and-notes.webp` | [Laptop Desk](https://stocksnap.io/photo/laptop-desk-2BJQISGWND) | Matt Moloney |
+| `public/apps/orcamail/photos/plant-and-laptop.webp` | [Laptop Desk](https://stocksnap.io/photo/laptop-desk-JCXQS3IVWD) | Lisa Fotios |
+| `public/apps/orcamail/photos/mac-desk.webp` | [Home Office](https://stocksnap.io/photo/home-office-QUU0AQABSN) | Design by Matt |
+| `public/apps/orcamail/photos/iphone-in-hand.webp` | [Iphone Smartphone](https://stocksnap.io/photo/iphone-smartphone-ODN23L0AC9) | Adrianna Calvo |
+| `public/apps/orcamail/photos/typing-on-laptop.webp` | [Office Work](https://stocksnap.io/photo/office-work-X4AAF4SU9Q) | Fabian Irsara |
+| `public/apps/orcamail/photos/phone-on-the-go.webp` | [Iphone Texting](https://stocksnap.io/photo/iphone-texting-HP2MPJT5B6) | Josh Felise |
+| `public/apps/orcamail/photos/paper-calendar.webp` | [Open calendar with notes](https://www.rawpixel.com/image/3299160/free-photo-image-calendar-time-plan) (rawpixel, CC0) | unknown |

@@ -45,7 +45,11 @@ export function SiteHeader() {
             ))}
           </ul>
         </nav>
-        {flagship ? (
+        {products.length > 1 ? (
+          <Link className="site-header__cta" href="/apps">
+            Explore the apps
+          </Link>
+        ) : flagship ? (
           <Link className="site-header__cta" href={`/apps/${flagship.slug}`}>
             Get {flagship.navLabel ?? flagship.name}
           </Link>
